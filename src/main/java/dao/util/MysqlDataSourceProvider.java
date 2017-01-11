@@ -1,9 +1,6 @@
-package dao;
+package dao.util;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -16,14 +13,10 @@ import java.util.Properties;
  * Since 08.01.17
  */
 
-public class DataSourceProvider {
+public class MysqlDataSourceProvider extends AbstractDataSourceProvider {
 
-    private static final Logger logger = LogManager.getLogger(DataSourceProvider.class);
-
-    private String path;
-
-    public DataSourceProvider(String path) {
-        this.path = path;
+    public MysqlDataSourceProvider(String path) {
+        super(path);
     }
 
     public DataSource getDataSource() throws IllegalArgumentException, IOException {
@@ -36,14 +29,6 @@ public class DataSourceProvider {
         dataSource.setPassword(checkValidity(properties.getProperty("db.password")));
 
         return dataSource;
-    }
-
-    private String checkValidity(String str) throws IllegalArgumentException {
-        if(StringUtils.isBlank(str)) {
-            logger.error("Property is broken or not found.");
-            throw new IllegalArgumentException("Property is broken or not found.");
-        }
-        return str;
     }
 
 }

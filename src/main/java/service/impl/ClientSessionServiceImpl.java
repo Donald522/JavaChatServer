@@ -1,6 +1,6 @@
 package service.impl;
 
-import dao.ClientSessionDao;
+import dao.core.ClientSessionDao;
 import model.Credentials;
 import model.User;
 import org.apache.logging.log4j.LogManager;

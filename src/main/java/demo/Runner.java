@@ -1,7 +1,8 @@
 package demo;
 
-import dao.ClientSessionDao;
-import dao.DataSourceProvider;
+import dao.core.ClientSessionDao;
+import dao.util.DataSourceProvider;
+import dao.util.MysqlDataSourceProvider;
 import handler.ClientMessageParser;
 import handler.impl.ClientMessageParserImpl;
 import model.command.Command;
@@ -22,7 +23,7 @@ import java.util.HashMap;
 public class Runner {
 
     public static void main(String[] args) throws IOException, SQLException {
-        DataSourceProvider dataSourceProvider = new DataSourceProvider("src/main/resources/database.properties");
+        DataSourceProvider dataSourceProvider = new MysqlDataSourceProvider("src/main/resources/database.properties");
         ClientSessionDao clientSessionDao;
         ClientSessionStorage storage;
         ClientMessageParser parser;
@@ -34,7 +35,7 @@ public class Runner {
         parser.parseInput("signup").handle();
 
 //        try {
-//            clientSessionDao = new ClientSessionDao(dataSourceProvider.getDataSource());
+//            clientSessionDao = new ClientSessionDao(mysqlDataSourceProvider.getDataSource());
 //            storage = new ClientSessionStorage(clientSessionDao);
 ////            System.out.println(storage.getUser("anton"));
 //            parser = new ClientMessageParserImpl();

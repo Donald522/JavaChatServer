@@ -1,4 +1,4 @@
-package dao;
+package dao.util;
 
 /**
  * Created by Anton Tolkachev.
