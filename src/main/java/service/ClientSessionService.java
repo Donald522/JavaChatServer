@@ -9,6 +9,6 @@ import model.Credentials;
 
 public interface ClientSessionService {
 
-    void signUpUser(Credentials credentials);
+    boolean signUpUser(Credentials credentials);
 
 }

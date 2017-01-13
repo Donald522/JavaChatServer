@@ -28,7 +28,7 @@ public class Runner {
     public static void main(String[] args) throws IOException, SQLException, RefreshFailedException {
 
         final String json = "{\"command\":\"signup\", " +
-                "\"username\":\"AntonTtt\", " +
+                "\"username\":\"AntonT\", " +
                 "\"password\":\"pass123\"}";
 
         final String path = "src/main/resources/database.properties";
@@ -48,7 +48,11 @@ public class Runner {
         }});
         parser = new ClientMessageParserImpl(factory);
 
-        parser.parseInput(json).handle();
+        try {
+            parser.parseInput(json).handle();
+        } catch (RuntimeException e) {
+            System.out.println("Name is already used. Please try another.");
+        }
 
     }
 

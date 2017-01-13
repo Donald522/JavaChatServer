@@ -26,14 +26,15 @@ public class ClientSessionServiceImpl implements ClientSessionService {
     }
 
     @Override
-    public void signUpUser(Credentials credentials) {
+    public boolean signUpUser(Credentials credentials) {
         logger.info("Request on register new user {}", credentials);
         if(storage.getUser(credentials.getName()) != null) {
-            logger.info("Attempt to sign up with already used username");
-            throw new IllegalArgumentException("Name is already used");
+            logger.info("Attempt to sign up with already used username {}", credentials.getName());
+            return false;
         }
         User user = new User(credentials);
         storage.storeUser(user);
-        logger.info("New user was successfully registered");
+        logger.info("New user {} was successfully registered", credentials);
+        return true;
     }
 }

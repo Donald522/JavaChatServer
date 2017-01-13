@@ -16,12 +16,16 @@ public class SignUpCommand extends AbstractCommand<Credentials> {
 
     @Override
     public void handle() {
-        service.signUpUser(argument.getArgument());
+        boolean response;
+        response = service.signUpUser(argument.getArgument());
+        if(!response) {
+            throw new RuntimeException("Name is already used");
+        }
     }
 
     @Override
     public Command<Credentials> withArguments(Map<?, ?> args) {
-        Credentials credentials = new Credentials((String)args.get("username"), (String) args.get("password"));
+        Credentials credentials = new Credentials((String) args.get("username"), (String) args.get("password"));
         setArgument(new Argument<>(credentials));
         return this;
     }
