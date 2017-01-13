@@ -6,11 +6,8 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Root level="info">
+        <Root level="OFF">
             <AppenderRef ref="Console"/>
         </Root>
-        <Logger name="org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry" level="ERROR" additivity="false">
-            <AppenderRef ref="STDOUT"/>
-        </Logger>
     </Loggers>
 </Configuration>

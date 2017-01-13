@@ -8,9 +8,12 @@ import handler.impl.ClientMessageParserImpl;
 import model.command.Command;
 import model.command.factory.CommandFactory;
 import model.command.impl.SignUpCommand;
+import service.ClientSessionService;
+import service.impl.ClientSessionServiceImpl;
 import storage.ClientSessionStorage;
 import util.Factory;
 
+import javax.security.auth.RefreshFailedException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -22,32 +25,31 @@ import java.util.HashMap;
 
 public class Runner {
 
-    public static void main(String[] args) throws IOException, SQLException {
-        DataSourceProvider dataSourceProvider = new MysqlDataSourceProvider("src/main/resources/database.properties");
-        ClientSessionDao clientSessionDao;
+    public static void main(String[] args) throws IOException, SQLException, RefreshFailedException {
+
+        final String json = "{\"command\":\"signup\", " +
+                "\"username\":\"AntonTtt\", " +
+                "\"password\":\"pass123\"}";
+
+        final String path = "src/main/resources/database.properties";
+
+        DataSourceProvider dataSourceProvider;
+        ClientSessionDao dao;
         ClientSessionStorage storage;
         ClientMessageParser parser;
-        Factory<?> factory = new CommandFactory(new HashMap<String, Command>(){{
-            put("signup", new SignUpCommand());
-        }});
-//        System.out.println(factory.getObject("signup").getClass());
-        parser = new ClientMessageParserImpl(factory);
-        parser.parseInput("signup").handle();
+        ClientSessionService service;
 
-//        try {
-//            clientSessionDao = new ClientSessionDao(mysqlDataSourceProvider.getDataSource());
-//            storage = new ClientSessionStorage(clientSessionDao);
-////            System.out.println(storage.getUser("anton"));
-//            parser = new ClientMessageParserImpl();
-//            parser.parseInput("").handle();
-//
-//
-////            System.out.println(clientSessionDao.storeUser(new User(2, "alex", "superpass")));
-//        } catch (RefreshFailedException e) {
-//            //hjhj
-//        } catch (IllegalArgumentException e) {
-//            //jhj
-//        }
+        dataSourceProvider = new MysqlDataSourceProvider(path);
+        dao = new ClientSessionDao(dataSourceProvider.getDataSource());
+        storage = new ClientSessionStorage(dao);
+        service = new ClientSessionServiceImpl(dao, storage);
+        Factory<?> factory = new CommandFactory(new HashMap<String, Command>(){{
+            put("signup", new SignUpCommand().withService(service));
+        }});
+        parser = new ClientMessageParserImpl(factory);
+
+        parser.parseInput(json).handle();
+
     }
 
 }

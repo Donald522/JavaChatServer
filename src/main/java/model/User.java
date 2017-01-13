@@ -8,8 +8,6 @@ import java.util.Objects;
  */
 public class User {
 
-    private static int UNIQUE_ID = 0;
-
     private int id;
     private String name;
     private String password;
@@ -21,7 +19,7 @@ public class User {
     }
 
     public User(String name, String password) {
-        this.id = ++UNIQUE_ID;
+        this.id = hashCode();
         this.name = name;
         this.password = password;
     }
