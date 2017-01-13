@@ -4,6 +4,7 @@ import model.Credentials;
 import model.command.AbstractCommand;
 import model.command.Argument;
 import model.command.Command;
+import util.JsonNodes;
 
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public class SignUpCommand extends AbstractCommand<Credentials> {
 
     @Override
     public Command<Credentials> withArguments(Map<?, ?> args) {
-        Credentials credentials = new Credentials((String) args.get("username"), (String) args.get("password"));
+        Credentials credentials = new Credentials((String) args.get(JsonNodes.USERNAME), (String) args.get(JsonNodes.PASSWORD));
         setArgument(new Argument<>(credentials));
         return this;
     }
