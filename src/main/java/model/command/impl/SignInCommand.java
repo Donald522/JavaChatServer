@@ -10,25 +10,23 @@ import java.util.Map;
 
 /**
  * Created by Anton Tolkachev.
- * Since 11.01.17
+ * Since 14.01.17
  */
 
-public class SignUpCommand extends AbstractCommand<Credentials> {
-
+public class SignInCommand extends AbstractCommand<Credentials> {
     @Override
     public void handle() {
         boolean response;
-        response = service.signUpUser(argument.getArgument());
+        response = service.signInUser(argument.getArgument());
         if(!response) {
-            throw new RuntimeException("Name is already used");
+            throw new RuntimeException("Unknown user");
         }
     }
 
     @Override
-    public Command<Credentials> withArguments(final Map<?, ?> args) {
+    public Command<Credentials> withArguments(Map<?, ?> args) {
         Credentials credentials = new Credentials((String) args.get(JsonNodes.USERNAME), (String) args.get(JsonNodes.PASSWORD));
         setArgument(new Argument<>(credentials));
         return this;
     }
-
 }

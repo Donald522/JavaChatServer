@@ -1,8 +1,9 @@
 package service.impl;
 
 import dao.core.ClientSessionDao;
-import model.Credentials;
-import model.User;
+import model.user.Credentials;
+import model.user.Status;
+import model.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import service.ClientSessionService;
@@ -37,4 +38,27 @@ public class ClientSessionServiceImpl implements ClientSessionService {
         logger.info("New user {} was successfully registered", credentials);
         return true;
     }
+
+    @Override
+    public boolean signInUser(Credentials credentials) {
+        logger.info("Request on sign in user {}", credentials);
+        User user = storage.getUser(credentials.getName());
+        if(user == null) {
+            logger.info("Attempt to sign in with unknown username {}", credentials.getName());
+            return false;
+        }
+        if(user.getStatus() == Status.ONLINE) {
+            logger.info("User {} is already online");
+            return true;
+        }
+        user.setStatus(Status.ONLINE);
+        logger.info("User {} signed in successfully");
+        return true;
+    }
+
+    @Override
+    public void handleDefaultCommand() {
+        logger.warn("Default command has been invoked");
+    }
+
 }

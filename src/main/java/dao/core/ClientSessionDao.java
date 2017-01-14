@@ -1,7 +1,7 @@
 package dao.core;
 
 import dao.util.Query;
-import model.User;
+import model.user.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 

@@ -1,7 +1,7 @@
 package storage;
 
 import dao.core.ClientSessionDao;
-import model.User;
+import model.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

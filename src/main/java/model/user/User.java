@@ -1,4 +1,4 @@
-package model;
+package model.user;
 
 import java.util.Objects;
 
@@ -11,6 +11,8 @@ public class User {
     private int id;
     private String name;
     private String password;
+
+    private Status status = Status.OFFLINE;
 
     public User(int id, String name, String password) {
         this.id = id;
@@ -39,7 +41,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(name);
     }
 
     @Override
@@ -61,6 +63,14 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public static class Builder {

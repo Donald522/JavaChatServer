@@ -15,6 +15,8 @@ public abstract class AbstractDataSourceProvider implements DataSourceProvider {
 
     protected String path;
 
+    public AbstractDataSourceProvider() {}
+
     public AbstractDataSourceProvider(String path) {
         this.path = path;
     }

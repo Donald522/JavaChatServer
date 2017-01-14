@@ -1,6 +1,6 @@
 package service;
 
-import model.Credentials;
+import model.user.Credentials;
 
 /**
  * Created by Anton Tolkachev.
@@ -10,5 +10,10 @@ import model.Credentials;
 public interface ClientSessionService {
 
     boolean signUpUser(Credentials credentials);
+
+    boolean signInUser(Credentials credentials);
+
+    void handleDefaultCommand();
+
 
 }

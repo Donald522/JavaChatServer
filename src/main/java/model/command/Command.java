@@ -11,6 +11,6 @@ public interface Command<T> {
 
     void handle();
 
-    Command<T> withArguments(Map<?, ?> args);
+    Command<T>  withArguments(Map<?, ?> args);
 
 }

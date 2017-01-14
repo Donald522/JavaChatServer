@@ -7,6 +7,7 @@ import handler.ClientMessageParser;
 import handler.impl.ClientMessageParserImpl;
 import model.command.Command;
 import model.command.factory.CommandFactory;
+import model.command.impl.DefaultCommand;
 import model.command.impl.SignUpCommand;
 import service.ClientSessionService;
 import service.impl.ClientSessionServiceImpl;
@@ -28,7 +29,7 @@ public class Runner {
     public static void main(String[] args) throws IOException, SQLException, RefreshFailedException {
 
         final String json = "{\"command\":\"signup\", " +
-                "\"username\":\"AntonT\", " +
+                "\"username\":\"AntonTolkachev\", " +
                 "\"password\":\"pass123\"}";
 
         final String path = "src/main/resources/database.properties";
@@ -45,11 +46,13 @@ public class Runner {
         service = new ClientSessionServiceImpl(dao, storage);
         Factory<?> factory = new CommandFactory(new HashMap<String, Command>(){{
             put("signup", new SignUpCommand().withService(service));
-        }});
+        }}).withDefaultValue(new DefaultCommand().withService(service));
+
         parser = new ClientMessageParserImpl(factory);
 
         try {
-            parser.parseInput(json).handle();
+            Command<?> command = parser.parseInput(json);
+            command.handle();
         } catch (RuntimeException e) {
             System.out.println("Name is already used. Please try another.");
         }
