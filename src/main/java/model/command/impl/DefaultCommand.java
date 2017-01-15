@@ -1,6 +1,7 @@
 package model.command.impl;
 
 import model.command.AbstractCommand;
+import model.command.Argument;
 import model.command.Command;
 
 import java.util.Map;
@@ -19,6 +20,7 @@ public class DefaultCommand extends AbstractCommand<Object> {
 
     @Override
     public Command<Object> withArguments(Map<?, ?> args) {
+        setArgument(new Argument<>(new Object()));
         return this;
     }
 }

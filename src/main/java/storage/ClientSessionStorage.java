@@ -2,6 +2,7 @@ package storage;
 
 import dao.core.ClientSessionDao;
 import model.user.User;
+import net.jcip.annotations.GuardedBy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -25,6 +28,9 @@ public class ClientSessionStorage implements Refreshable {
     private ClientSessionDao clientSessionDao;
     private ExecutorService executor = Executors.newFixedThreadPool(1);
 
+    private Lock lock = new ReentrantLock();
+
+    @GuardedBy("lock")
     private Map<String, User> usersCache;
 
     public ClientSessionStorage(ClientSessionDao clientSessionDao) throws RefreshFailedException {
@@ -68,7 +74,9 @@ public class ClientSessionStorage implements Refreshable {
     }
 
     public void storeUser(User user) {
+        lock.lock();
         clientSessionDao.storeUser(user);
         usersCache.put(user.getName(), user);
+        lock.unlock();
     }
 }
