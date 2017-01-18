@@ -47,12 +47,16 @@ public class ClientSessionServiceImpl implements ClientSessionService {
             logger.info("Attempt to sign in with unknown username {}", credentials.getName());
             return false;
         }
+        if(!user.getPassword().equals(credentials.getPassword())) {
+            logger.info("Attempt to sign in with wrong password {}", credentials);
+            return false;
+        }
         if(user.getStatus() == Status.ONLINE) {
-            logger.info("User {} is already online");
+            logger.info("User {} is already online", user);
             return true;
         }
         user.setStatus(Status.ONLINE);
-        logger.info("User {} signed in successfully");
+        logger.info("User {} signed in successfully", user);
         return true;
     }
 

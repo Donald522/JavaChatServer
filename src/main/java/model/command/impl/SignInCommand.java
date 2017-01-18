@@ -19,7 +19,7 @@ public class SignInCommand extends AbstractCommand<Credentials> {
         boolean response;
         response = service.signInUser(argument.getArgument());
         if(!response) {
-            throw new RuntimeException("Unknown user");
+            throw new RuntimeException("Unknown user or incorrect password");
         }
     }
 
