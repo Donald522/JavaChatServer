@@ -9,6 +9,7 @@ import model.command.Command;
 import model.command.factory.CommandFactory;
 import model.command.impl.DefaultCommand;
 import model.command.impl.SignUpCommand;
+import network.SocketProvider;
 import service.ClientSessionService;
 import service.impl.ClientSessionServiceImpl;
 import storage.ClientSessionStorage;
@@ -32,18 +33,25 @@ public class Runner {
                 "\"username\":\"AntonTolkachev\", " +
                 "\"password\":\"pass123\"}";
 
+        /*
+        {"command":"signup", "username":"AntonT", "password":"pass123"}
+
+         */
+
         final String path = "src/main/resources/database.properties";
 
         DataSourceProvider dataSourceProvider;
         ClientSessionDao dao;
         ClientSessionStorage storage;
+        SocketProvider socketProvider;
         ClientMessageParser parser;
         ClientSessionService service;
 
         dataSourceProvider = new MysqlDataSourceProvider(path);
         dao = new ClientSessionDao(dataSourceProvider.getDataSource());
         storage = new ClientSessionStorage(dao);
-        service = new ClientSessionServiceImpl(dao, storage);
+        socketProvider = new SocketProvider();
+        service = new ClientSessionServiceImpl(dao, storage, socketProvider);
         Factory<?> factory = new CommandFactory(new HashMap<String, Command>(){{
             put("signup", new SignUpCommand().withService(service));
         }}).withDefaultValue(new DefaultCommand().withService(service));
@@ -52,7 +60,8 @@ public class Runner {
 
         try {
             Command<?> command = parser.parseInput(json);
-            command.handle();
+            System.out.println(command.getClass());
+//            command.handle();
         } catch (RuntimeException e) {
             System.out.println("Name is already used. Please try another.");
         }

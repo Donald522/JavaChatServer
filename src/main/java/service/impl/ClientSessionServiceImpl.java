@@ -4,6 +4,7 @@ import dao.core.ClientSessionDao;
 import model.user.Credentials;
 import model.user.Status;
 import model.user.User;
+import network.SocketProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import service.ClientSessionService;
@@ -21,9 +22,14 @@ public class ClientSessionServiceImpl implements ClientSessionService {
     private ClientSessionDao dao;
     private ClientSessionStorage storage;
 
-    public ClientSessionServiceImpl(ClientSessionDao dao, ClientSessionStorage storage) {
+    private SocketProvider socketProvider;
+
+    public ClientSessionServiceImpl(ClientSessionDao dao,
+                                    ClientSessionStorage storage,
+                                    SocketProvider socketProvider) {
         this.dao = dao;
         this.storage = storage;
+        this.socketProvider = socketProvider;
     }
 
     @Override

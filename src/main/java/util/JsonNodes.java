@@ -6,7 +6,7 @@ package util;
  */
 
 public enum JsonNodes {
-    COMMAND,
-    USERNAME,
-    PASSWORD
+    command,
+    username,
+    password
 }

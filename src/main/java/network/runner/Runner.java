@@ -2,6 +2,7 @@ package network.runner;
 
 import network.Server;
 
+import javax.security.auth.RefreshFailedException;
 import java.io.IOException;
 
 /**
@@ -11,9 +12,11 @@ import java.io.IOException;
 
 public class Runner {
 
-    public static void main(String[] args) throws IOException {
-        Server server = new Server(1234);
-        server.run();
+    public static void main(String[] args) throws IOException, RefreshFailedException {
+
+        Server server = new Server();
+        server.start();
+
     }
 
 }
