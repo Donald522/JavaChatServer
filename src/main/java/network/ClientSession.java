@@ -2,6 +2,8 @@ package network;
 
 import handler.ClientMessageParser;
 import model.command.Command;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -15,6 +17,8 @@ import java.net.Socket;
  */
 
 public class ClientSession {
+
+    private static final Logger logger = LogManager.getLogger(ClientSession.class);
 
     private final Socket socket;
     private final ClientMessageParser parser;
@@ -30,15 +34,27 @@ public class ClientSession {
                             new BufferedInputStream(
                                     this.socket.getInputStream()), "UTF-8"))) {
             while (true) {
-                String line = reader.readLine();
-                if(line == null) {
+                if (processClient(reader)) {
                     break;
                 }
-                Command<?> command = parser.parseInput(line);
-                command.handle();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean processClient(BufferedReader reader) throws IOException {
+        String line = reader.readLine();
+        if(line == null) {
+            return true;
+        }
+        try {
+            Command<?> command = parser.parseInput(line);
+            command.handle();
+        } catch (RuntimeException | IOException e) {
+            logger.info("Error occurs while handling client's input. Cause: " + e.getMessage());
+            // send a response to the client. Format of response will be agreed later.
+        }
+        return false;
     }
 }
