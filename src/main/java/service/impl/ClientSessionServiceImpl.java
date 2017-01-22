@@ -40,6 +40,7 @@ public class ClientSessionServiceImpl implements ClientSessionService {
             return false;
         }
         User user = new User(credentials);
+        user.setSocket(socketProvider.getSocket());
         storage.storeUser(user);
         logger.info("New user {} was successfully registered", credentials);
         return true;
@@ -59,6 +60,7 @@ public class ClientSessionServiceImpl implements ClientSessionService {
         }
         if(user.getStatus() == Status.ONLINE) {
             logger.info("User {} is already online", user);
+            user.setSocket(socketProvider.getSocket());
             return true;
         }
         user.setStatus(Status.ONLINE);
