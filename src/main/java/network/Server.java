@@ -77,6 +77,7 @@ public class Server {
                 new ClientSession(client, parser).run();
             });
         }
+        logger.info("Server is shutting down");
         executorService.shutdown();
     }
 

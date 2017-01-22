@@ -30,11 +30,11 @@ public class Runner {
     public static void main(String[] args) throws IOException, SQLException, RefreshFailedException {
 
         final String json = "{\"command\":\"signup\", " +
-                "\"username\":\"AntonTolkachev\", " +
+                "\"username\":\"AntonG\", " +
                 "\"password\":\"pass123\"}";
 
         /*
-        {"command":"signup", "username":"AntonT", "password":"pass123"}
+        {"command":"signup", "username":"AntonA", "password":"pass123"}
 
          */
 
@@ -60,8 +60,7 @@ public class Runner {
 
         try {
             Command<?> command = parser.parseInput(json);
-            System.out.println(command.getClass());
-//            command.handle();
+            command.handle();
         } catch (RuntimeException e) {
             System.out.println("Name is already used. Please try another.");
         }
