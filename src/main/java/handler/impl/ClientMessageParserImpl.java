@@ -26,8 +26,8 @@ public class ClientMessageParserImpl implements ClientMessageParser {
     @Override
     public Command<?> parseInput(String jsonString) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        Map<JsonNodes, String> nodes = mapper.readValue(jsonString, new TypeReference<Map<String,String>>(){});
-        Command<?> command = (Command<?>) factory.getObject(nodes.get(JsonNodes.COMMAND));
+        Map<JsonNodes, ?> nodes = mapper.readValue(jsonString, new TypeReference<Map<JsonNodes,?>>(){});
+        Command<?> command = (Command<?>) factory.getObject((String) nodes.get(JsonNodes.COMMAND));
         return command.withArguments(nodes);
     }
 }

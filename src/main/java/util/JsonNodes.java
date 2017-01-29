@@ -8,5 +8,6 @@ package util;
 public enum JsonNodes {
     COMMAND,
     USERNAME,
-    PASSWORD
+    PASSWORD,
+    USERS
 }
