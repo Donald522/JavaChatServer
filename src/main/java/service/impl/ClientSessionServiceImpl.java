@@ -2,6 +2,7 @@ package service.impl;
 
 import dao.core.ClientSessionDao;
 import model.dialog.Dialog;
+import model.dialog.Message;
 import model.user.Credentials;
 import model.user.Status;
 import model.user.User;
@@ -91,6 +92,11 @@ public class ClientSessionServiceImpl implements ClientSessionService {
         }
         logger.info("New dialog #{} has been successfully created", dialog.getId());
         return response;
+    }
+
+    @Override
+    public boolean sendMessage(Message message) {
+        return dialogService.sendMessage(message);
     }
 
 }

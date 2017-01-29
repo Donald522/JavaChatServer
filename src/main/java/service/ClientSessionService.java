@@ -1,6 +1,7 @@
 package service;
 
 import model.dialog.Dialog;
+import model.dialog.Message;
 import model.user.Credentials;
 import model.user.User;
 
@@ -20,5 +21,7 @@ public interface ClientSessionService {
     void handleDefaultCommand();
 
     boolean createNewDialog(Dialog dialog);
+
+    boolean sendMessage(Message message);
 
 }

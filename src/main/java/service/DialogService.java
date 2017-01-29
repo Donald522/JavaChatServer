@@ -1,6 +1,7 @@
 package service;
 
 import model.dialog.Dialog;
+import model.dialog.Message;
 import model.user.User;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -22,5 +23,7 @@ public interface DialogService {
     boolean addUsersToDialog(Pair<Integer, List<User>> newUsers);
 
     boolean deleteUserFromDialog(Pair<Integer, User> userToDelete);
+
+    boolean sendMessage(Message message);
 
 }
