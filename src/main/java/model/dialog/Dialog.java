@@ -23,7 +23,7 @@ public class Dialog {
     public Dialog(List<User> users) {
         this.users = new CopyOnWriteArrayList<>(users);
         messages = new LinkedBlockingQueue<>(100);
-        id = hashCode();
+        id = hashCode() % Integer.MAX_VALUE;
     }
 
     public boolean addUser(User user) {

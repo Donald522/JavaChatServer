@@ -9,6 +9,7 @@ import service.MessageSender;
 import service.StreamProvider;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.net.Socket;
 import java.util.Collection;
 import java.util.List;
@@ -43,7 +44,9 @@ public class MessageSenderImpl implements MessageSender {
             Set<Socket> sockets = user.getSockets();
             sockets.forEach((socket) -> {
                 try {
-                    streamProvider.getWriter(socket).write(message.getMessage());
+                    Writer writer = streamProvider.getWriter(socket);
+                    writer.write(message.getMessage());
+                    writer.flush();
                 } catch (IOException e) {
                     logger.warn("Can't send a message to client {}", user);
                 }
@@ -53,12 +56,14 @@ public class MessageSenderImpl implements MessageSender {
 
     @Override
     public void run() {
-        dialogs.forEach((dialog) -> {
-            Message message = dialog.getMessages().poll();
-            if (message != null) {
-                send(message, dialog);
-            }
-        });
+        while (true) {
+            dialogs.forEach((dialog) -> {
+                Message message = dialog.getMessages().poll();
+                if (message != null) {
+                    send(message, dialog);
+                }
+            });
+        }
     }
 
     public void setStreamProvider(StreamProvider streamProvider) {

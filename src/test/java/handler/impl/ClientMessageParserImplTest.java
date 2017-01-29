@@ -3,11 +3,9 @@ package handler.impl;
 import model.command.AbstractCommand;
 import model.command.Argument;
 import model.command.Command;
-import model.command.impl.CreateDialogCommand;
-import model.command.impl.DefaultCommand;
-import model.command.impl.SignInCommand;
-import model.command.impl.SignUpCommand;
+import model.command.impl.*;
 import model.dialog.Dialog;
+import model.dialog.Message;
 import model.user.Credentials;
 import model.user.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,6 +45,7 @@ class ClientMessageParserImplTest {
         Mockito.doReturn(new SignUpCommand()).when(factory).getObject("signup");
         Mockito.doReturn(new SignInCommand()).when(factory).getObject("signin");
         Mockito.doReturn(new CreateDialogCommand().withService(service)).when(factory).getObject("newdlg");
+        Mockito.doReturn(new SendMessageCommand()).when(factory).getObject("sendmsg");
 
         clientMessageParser = new ClientMessageParserImpl(factory);
     }
@@ -81,6 +80,19 @@ class ClientMessageParserImplTest {
                 new User("u2", "p2")));
         expected.setArgument(new Argument<>(dialog));
         assertEquals(expected, actual, "CreateDialog should be returned");
+    }
+
+    @Test
+    void test() throws IOException {
+        String json = "{\"COMMAND\":\"sendmsg\", \"MESSAGE\":\"Hello\", \"DIALOG_ID\":\"-724451199\"}";
+        AbstractCommand<Message> expected = new SendMessageCommand();
+        Message message = Message.newBuilder()
+                .setDialogId(-724451199)
+                .setMessage("Hello")
+                .build();
+        expected.setArgument(new Argument<>(message));
+        Command<?> actual = clientMessageParser.parseInput(json);
+        assertEquals(expected, actual, "SendMessage should be returned");
     }
 
 }

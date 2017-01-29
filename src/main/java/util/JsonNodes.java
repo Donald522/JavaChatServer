@@ -9,5 +9,7 @@ public enum JsonNodes {
     COMMAND,
     USERNAME,
     PASSWORD,
-    USERS
+    USERS,
+    MESSAGE,
+    DIALOG_ID
 }

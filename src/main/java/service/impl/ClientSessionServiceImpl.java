@@ -68,9 +68,9 @@ public class ClientSessionServiceImpl implements ClientSessionService {
             logger.info("Attempt to sign in with wrong password {}", credentials);
             return false;
         }
+        user.setSocket(socketProvider.getSocket());
         if(user.getStatus() == Status.ONLINE) {
             logger.info("User {} is already online", user);
-            user.setSocket(socketProvider.getSocket());
             return true;
         }
         user.setStatus(Status.ONLINE);
