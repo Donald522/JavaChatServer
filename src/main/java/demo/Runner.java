@@ -10,6 +10,7 @@ import model.command.factory.CommandFactory;
 import model.command.impl.DefaultCommand;
 import model.command.impl.SignInCommand;
 import model.command.impl.SignUpCommand;
+import network.SocketProvider;
 import service.ClientSessionService;
 import service.DialogService;
 import service.impl.ClientSessionServiceImpl;
@@ -32,8 +33,13 @@ public class Runner {
     public static void main(String[] args) throws IOException, SQLException, RefreshFailedException {
 
         final String json = "{\"command\":\"signup\", " +
-                "\"username\":\"AntonTolkachev\", " +
+                "\"username\":\"AntonG\", " +
                 "\"password\":\"pass123\"}";
+
+        /*
+        {"command":"signup", "username":"AntonA", "password":"pass123"}
+
+         */
 
         final String path = "src/main/resources/database.properties";
 
@@ -41,6 +47,7 @@ public class Runner {
         ClientSessionDao dao;
         ClientSessionStorage storage;
         DialogService dialogService;
+        SocketProvider socketProvider;
         ClientMessageParser parser;
         ClientSessionService service;
 
@@ -48,7 +55,8 @@ public class Runner {
         dao = new ClientSessionDao(dataSourceProvider.getDataSource());
         storage = new ClientSessionStorage(dao);
         dialogService = new DialogServiceImpl();
-        service = new ClientSessionServiceImpl(dao, storage, dialogService);
+        socketProvider = new SocketProvider();
+        service = new ClientSessionServiceImpl(dao, storage, dialogService, socketProvider);
         Factory<?> factory = new CommandFactory(new HashMap<String, Command>(){{
             put("signup", new SignUpCommand().withService(service));
             put("signin", new SignInCommand().withService(service));

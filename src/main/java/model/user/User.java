@@ -1,6 +1,9 @@
 package model.user;
 
+import java.net.Socket;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by Anton Tolkachev.
@@ -14,6 +17,8 @@ public class User {
 
     private Status status = Status.OFFLINE;
 
+    private Set<Socket> sockets = new HashSet<>();
+
     public User(int id, String name, String password) {
         this.id = id;
         this.name = name;
@@ -21,9 +26,9 @@ public class User {
     }
 
     public User(String name, String password) {
-        this.id = hashCode();
         this.name = name;
         this.password = password;
+        this.id = hashCode();
     }
 
     public User(Credentials credentials) {
@@ -70,6 +75,10 @@ public class User {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public void setSocket(Socket socket) {
+        this.sockets.add(socket);
     }
 
     public static class Builder {

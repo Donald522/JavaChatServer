@@ -5,6 +5,7 @@ import model.dialog.Dialog;
 import model.user.Credentials;
 import model.user.Status;
 import model.user.User;
+import network.SocketProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import service.ClientSessionService;
@@ -23,13 +24,16 @@ public class ClientSessionServiceImpl implements ClientSessionService {
     private ClientSessionDao dao;
     private ClientSessionStorage storage;
     private DialogService dialogService;
+    private SocketProvider socketProvider;
 
     public ClientSessionServiceImpl(ClientSessionDao dao,
                                     ClientSessionStorage storage,
-                                    DialogService dialogService) {
+                                    DialogService dialogService,
+                                    SocketProvider socketProvider) {
         this.dao = dao;
         this.storage = storage;
         this.dialogService = dialogService;
+        this.socketProvider = socketProvider;
     }
 
     @Override
@@ -45,6 +49,7 @@ public class ClientSessionServiceImpl implements ClientSessionService {
             return false;
         }
         User user = new User(credentials);
+        user.setSocket(socketProvider.getSocket());
         storage.storeUser(user);
         logger.info("New user {} was successfully registered", credentials);
         return true;
@@ -58,12 +63,17 @@ public class ClientSessionServiceImpl implements ClientSessionService {
             logger.info("Attempt to sign in with unknown username {}", credentials.getName());
             return false;
         }
+        if(!user.getPassword().equals(credentials.getPassword())) {
+            logger.info("Attempt to sign in with wrong password {}", credentials);
+            return false;
+        }
         if(user.getStatus() == Status.ONLINE) {
-            logger.info("User {} is already online");
+            logger.info("User {} is already online", user);
+            user.setSocket(socketProvider.getSocket());
             return true;
         }
         user.setStatus(Status.ONLINE);
-        logger.info("User {} signed in successfully");
+        logger.info("User {} signed in successfully", user);
         return true;
     }
 

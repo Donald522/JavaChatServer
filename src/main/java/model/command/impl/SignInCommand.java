@@ -19,13 +19,13 @@ public class SignInCommand extends AbstractCommand<Credentials> {
         boolean response;
         response = service.signInUser(argument.getArgument());
         if(!response) {
-            throw new RuntimeException("Unknown user");
+            throw new RuntimeException("Unknown user or incorrect password");
         }
     }
 
     @Override
     public Command<Credentials> withArguments(Map<?, ?> args) {
-        Credentials credentials = new Credentials((String) args.get(JsonNodes.USERNAME), (String) args.get(JsonNodes.PASSWORD));
+        Credentials credentials = new Credentials((String) args.get(JsonNodes.username), (String) args.get(JsonNodes.password));
         setArgument(new Argument<>(credentials));
         return this;
     }
