@@ -1,12 +1,14 @@
 package service.impl;
 
 import dao.core.ClientSessionDao;
+import model.dialog.Dialog;
 import model.user.Credentials;
 import model.user.Status;
 import model.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import service.ClientSessionService;
+import service.DialogService;
 import storage.ClientSessionStorage;
 
 /**
@@ -20,10 +22,19 @@ public class ClientSessionServiceImpl implements ClientSessionService {
 
     private ClientSessionDao dao;
     private ClientSessionStorage storage;
+    private DialogService dialogService;
 
-    public ClientSessionServiceImpl(ClientSessionDao dao, ClientSessionStorage storage) {
+    public ClientSessionServiceImpl(ClientSessionDao dao,
+                                    ClientSessionStorage storage,
+                                    DialogService dialogService) {
         this.dao = dao;
         this.storage = storage;
+        this.dialogService = dialogService;
+    }
+
+    @Override
+    public User getUserByName(String username) {
+        return storage.getUser(username);
     }
 
     @Override
@@ -59,6 +70,11 @@ public class ClientSessionServiceImpl implements ClientSessionService {
     @Override
     public void handleDefaultCommand() {
         logger.warn("Default command has been invoked");
+    }
+
+    @Override
+    public boolean createNewDialog(Dialog dialog) {
+        return dialogService.createNewDialog(dialog);
     }
 
 }

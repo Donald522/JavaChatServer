@@ -1,6 +1,8 @@
 package service;
 
+import model.dialog.Dialog;
 import model.user.Credentials;
+import model.user.User;
 
 /**
  * Created by Anton Tolkachev.
@@ -9,11 +11,14 @@ import model.user.Credentials;
 
 public interface ClientSessionService {
 
+    User getUserByName(String username);
+
     boolean signUpUser(Credentials credentials);
 
     boolean signInUser(Credentials credentials);
 
     void handleDefaultCommand();
 
+    boolean createNewDialog(Dialog dialog);
 
 }
