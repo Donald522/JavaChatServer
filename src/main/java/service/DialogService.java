@@ -13,6 +13,8 @@ import java.util.List;
 
 public interface DialogService {
 
+    void start();
+
     boolean createNewDialog(Dialog dialog);
 
     boolean addUserToDialog(Pair<Integer, User> newUser);

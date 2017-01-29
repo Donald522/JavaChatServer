@@ -12,7 +12,9 @@ import model.command.impl.SignUpCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import service.ClientSessionService;
+import service.DialogService;
 import service.impl.ClientSessionServiceImpl;
+import service.impl.DialogServiceImpl;
 import storage.ClientSessionStorage;
 import util.Factory;
 
@@ -42,6 +44,7 @@ public class Server {
     private DataSourceProvider dataSourceProvider;
     private ClientSessionDao dao;
     private ClientSessionStorage storage;
+    private DialogService dialogService;
     private SocketProvider socketProvider;
     private final ClientMessageParser parser;
     private ClientSessionService service;
@@ -55,8 +58,9 @@ public class Server {
         dataSourceProvider = new MysqlDataSourceProvider(PATH);
         dao = new ClientSessionDao(dataSourceProvider.getDataSource());
         storage = new ClientSessionStorage(dao);
+        dialogService = new DialogServiceImpl();
         socketProvider = new SocketProvider();
-        service = new ClientSessionServiceImpl(dao, storage, socketProvider);
+        service = new ClientSessionServiceImpl(dao, storage, dialogService, socketProvider);
         Factory<?> factory = new CommandFactory(new HashMap<String, Command>(){{
             put("signup", new SignUpCommand().withService(service));
         }}).withDefaultValue(new DefaultCommand().withService(service));
@@ -69,6 +73,7 @@ public class Server {
     }
 
     public void start() throws IOException {
+        dialogService.start();
         logger.info("Server started");
         while (!serverSocket.isClosed()) {
             final Socket client = serverSocket.accept();

@@ -84,7 +84,13 @@ public class ClientSessionServiceImpl implements ClientSessionService {
 
     @Override
     public boolean createNewDialog(Dialog dialog) {
-        return dialogService.createNewDialog(dialog);
+        logger.info("Request on create new dialog with users {}", dialog.getUsers());
+        boolean response = dialogService.createNewDialog(dialog);
+        if(!response) {
+            logger.info("Failed to create new dialog #{}. Dialog already exists", dialog.getId());
+        }
+        logger.info("New dialog #{} has been successfully created", dialog.getId());
+        return response;
     }
 
 }

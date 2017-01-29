@@ -53,9 +53,9 @@ class ClientMessageParserImplTest {
 
     @Test
     void testParseInputWhenPassedSignUpWithCorrectData() throws IOException {
-        String json = "{\"command\":\"signup\", " +
-                "\"username\":\"Anton\", " +
-                "\"password\":\"pass123\"}";
+        String json = "{\"COMMAND\":\"signup\", " +
+                "\"USERNAME\":\"Anton\", " +
+                "\"PASSWORD\":\"pass123\"}";
         Command<?> actual = clientMessageParser.parseInput(json);
         Credentials credentials = new Credentials("Anton", "pass123");
         AbstractCommand<Credentials> expected = new SignUpCommand();
@@ -65,9 +65,9 @@ class ClientMessageParserImplTest {
 
     @Test
     void testParseInputWhenPassedUnknownCommand() throws IOException {
-        String json = "{\"command\":\"unknown\", " +
-                "\"username\":\"Anton\", " +
-                "\"password\":\"pass123\"}";
+        String json = "{\"COMMAND\":\"unknown\", " +
+                "\"USERNAME\":\"Anton\", " +
+                "\"PASSWORD\":\"pass123\"}";
         Command<?> actual = clientMessageParser.parseInput(json);
         assertEquals(DefaultCommand.class, actual.getClass(), "DefaultCommand should be returned");
     }

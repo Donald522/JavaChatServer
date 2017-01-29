@@ -1,5 +1,6 @@
 package service;
 
+import model.dialog.Dialog;
 import model.dialog.Message;
 
 /**
@@ -9,6 +10,6 @@ import model.dialog.Message;
 
 public interface MessageSender extends Runnable {
 
-    void send(Message message);
+    void send(Message message, Dialog dialog);
 
 }

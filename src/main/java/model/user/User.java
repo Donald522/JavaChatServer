@@ -73,6 +73,10 @@ public class User {
         return status;
     }
 
+    public Set<Socket> getSockets() {
+        return sockets;
+    }
+
     public void setStatus(Status status) {
         this.status = status;
     }

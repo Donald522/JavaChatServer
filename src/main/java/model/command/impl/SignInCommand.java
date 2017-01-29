@@ -25,7 +25,7 @@ public class SignInCommand extends AbstractCommand<Credentials> {
 
     @Override
     public Command<Credentials> withArguments(Map<?, ?> args) {
-        Credentials credentials = new Credentials((String) args.get(JsonNodes.username), (String) args.get(JsonNodes.password));
+        Credentials credentials = new Credentials((String) args.get(JsonNodes.USERNAME), (String) args.get(JsonNodes.PASSWORD));
         setArgument(new Argument<>(credentials));
         return this;
     }

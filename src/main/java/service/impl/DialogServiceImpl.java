@@ -4,6 +4,7 @@ import model.dialog.Dialog;
 import model.user.User;
 import org.apache.commons.lang3.tuple.Pair;
 import service.DialogService;
+import service.MessageSender;
 
 import java.util.List;
 import java.util.Map;
@@ -18,8 +19,16 @@ public class DialogServiceImpl implements DialogService {
 
     private Map<Integer, Dialog> dialogs;
 
+    private MessageSender messageSender;
+
     public DialogServiceImpl() {
         this.dialogs = new ConcurrentHashMap<>();
+        this.messageSender = new MessageSenderImpl(dialogs.values());
+    }
+
+    @Override
+    public void start() {
+        new Thread(messageSender).start();
     }
 
     @Override

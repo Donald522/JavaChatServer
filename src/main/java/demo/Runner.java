@@ -64,6 +64,8 @@ public class Runner {
 
         parser = new ClientMessageParserImpl(factory);
 
+        dialogService.start();
+
         parser.parseInput("{ \"users\" : [] }");
 //        try {
 //            Command<?> command = parser.parseInput(json);
