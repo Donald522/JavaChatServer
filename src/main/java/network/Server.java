@@ -7,12 +7,13 @@ import handler.ClientMessageParser;
 import handler.impl.ClientMessageParserImpl;
 import model.command.Command;
 import model.command.factory.CommandFactory;
-import model.command.impl.DefaultCommand;
-import model.command.impl.SignUpCommand;
+import model.command.impl.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import service.ClientSessionService;
+import service.DialogService;
 import service.impl.ClientSessionServiceImpl;
+import service.impl.DialogServiceImpl;
 import storage.ClientSessionStorage;
 import util.Factory;
 
@@ -42,6 +43,7 @@ public class Server {
     private DataSourceProvider dataSourceProvider;
     private ClientSessionDao dao;
     private ClientSessionStorage storage;
+    private DialogService dialogService;
     private SocketProvider socketProvider;
     private final ClientMessageParser parser;
     private ClientSessionService service;
@@ -55,10 +57,14 @@ public class Server {
         dataSourceProvider = new MysqlDataSourceProvider(PATH);
         dao = new ClientSessionDao(dataSourceProvider.getDataSource());
         storage = new ClientSessionStorage(dao);
+        dialogService = new DialogServiceImpl();
         socketProvider = new SocketProvider();
-        service = new ClientSessionServiceImpl(dao, storage, socketProvider);
+        service = new ClientSessionServiceImpl(dao, storage, dialogService, socketProvider);
         Factory<?> factory = new CommandFactory(new HashMap<String, Command>(){{
             put("signup", new SignUpCommand().withService(service));
+            put("signin", new SignInCommand().withService(service));
+            put("newdlg", new CreateDialogCommand().withService(service));
+            put("sendmsg", new SendMessageCommand().withService(service));
         }}).withDefaultValue(new DefaultCommand().withService(service));
 
         parser = new ClientMessageParserImpl(factory);
@@ -69,6 +75,7 @@ public class Server {
     }
 
     public void start() throws IOException {
+        dialogService.start();
         logger.info("Server started");
         while (!serverSocket.isClosed()) {
             final Socket client = serverSocket.accept();

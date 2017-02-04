@@ -1,6 +1,8 @@
 package service.impl;
 
 import dao.core.ClientSessionDao;
+import model.dialog.Dialog;
+import model.dialog.Message;
 import model.user.Credentials;
 import model.user.Status;
 import model.user.User;
@@ -8,6 +10,7 @@ import network.SocketProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import service.ClientSessionService;
+import service.DialogService;
 import storage.ClientSessionStorage;
 
 /**
@@ -21,15 +24,22 @@ public class ClientSessionServiceImpl implements ClientSessionService {
 
     private ClientSessionDao dao;
     private ClientSessionStorage storage;
-
+    private DialogService dialogService;
     private SocketProvider socketProvider;
 
     public ClientSessionServiceImpl(ClientSessionDao dao,
                                     ClientSessionStorage storage,
+                                    DialogService dialogService,
                                     SocketProvider socketProvider) {
         this.dao = dao;
         this.storage = storage;
+        this.dialogService = dialogService;
         this.socketProvider = socketProvider;
+    }
+
+    @Override
+    public User getUserByName(String username) {
+        return storage.getUser(username);
     }
 
     @Override
@@ -58,9 +68,9 @@ public class ClientSessionServiceImpl implements ClientSessionService {
             logger.info("Attempt to sign in with wrong password {}", credentials);
             return false;
         }
+        user.setSocket(socketProvider.getSocket());
         if(user.getStatus() == Status.ONLINE) {
             logger.info("User {} is already online", user);
-            user.setSocket(socketProvider.getSocket());
             return true;
         }
         user.setStatus(Status.ONLINE);
@@ -71,6 +81,22 @@ public class ClientSessionServiceImpl implements ClientSessionService {
     @Override
     public void handleDefaultCommand() {
         logger.warn("Default command has been invoked");
+    }
+
+    @Override
+    public boolean createNewDialog(Dialog dialog) {
+        logger.info("Request on create new dialog with users {}", dialog.getUsers());
+        boolean response = dialogService.createNewDialog(dialog);
+        if(!response) {
+            logger.info("Failed to create new dialog #{}. Dialog already exists", dialog.getId());
+        }
+        logger.info("New dialog #{} has been successfully created", dialog.getId());
+        return response;
+    }
+
+    @Override
+    public boolean sendMessage(Message message) {
+        return dialogService.sendMessage(message);
     }
 
 }

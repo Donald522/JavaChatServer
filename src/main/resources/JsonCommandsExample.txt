@@ -1,0 +1,12 @@
+{"COMMAND":"signup", "USERNAME":"user1", "PASSWORD":"pass1"}
+{"COMMAND":"signin", "USERNAME":"user1", "PASSWORD":"pass1"}
+
+{"COMMAND":"signup", "USERNAME":"user2", "PASSWORD":"pass2"}
+{"COMMAND":"signin", "USERNAME":"user2", "PASSWORD":"pass2"}
+
+{"COMMAND":"signup", "USERNAME":"user3", "PASSWORD":"pass3"}
+{"COMMAND":"signin", "USERNAME":"user3", "PASSWORD":"pass3"}
+
+{"COMMAND":"newdlg", "USERS":["user1", "user2"]}
+
+{"COMMAND":"sendmsg", "MESSAGE":"Hello", "DIALOG_ID":"-724451199"}

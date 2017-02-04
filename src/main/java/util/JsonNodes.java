@@ -6,7 +6,10 @@ package util;
  */
 
 public enum JsonNodes {
-    command,
-    username,
-    password
+    COMMAND,
+    USERNAME,
+    PASSWORD,
+    USERS,
+    MESSAGE,
+    DIALOG_ID
 }

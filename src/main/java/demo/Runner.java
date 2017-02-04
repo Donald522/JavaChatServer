@@ -8,10 +8,13 @@ import handler.impl.ClientMessageParserImpl;
 import model.command.Command;
 import model.command.factory.CommandFactory;
 import model.command.impl.DefaultCommand;
+import model.command.impl.SignInCommand;
 import model.command.impl.SignUpCommand;
 import network.SocketProvider;
 import service.ClientSessionService;
+import service.DialogService;
 import service.impl.ClientSessionServiceImpl;
+import service.impl.DialogServiceImpl;
 import storage.ClientSessionStorage;
 import util.Factory;
 
@@ -43,6 +46,7 @@ public class Runner {
         DataSourceProvider dataSourceProvider;
         ClientSessionDao dao;
         ClientSessionStorage storage;
+        DialogService dialogService;
         SocketProvider socketProvider;
         ClientMessageParser parser;
         ClientSessionService service;
@@ -50,20 +54,25 @@ public class Runner {
         dataSourceProvider = new MysqlDataSourceProvider(path);
         dao = new ClientSessionDao(dataSourceProvider.getDataSource());
         storage = new ClientSessionStorage(dao);
+        dialogService = new DialogServiceImpl();
         socketProvider = new SocketProvider();
-        service = new ClientSessionServiceImpl(dao, storage, socketProvider);
+        service = new ClientSessionServiceImpl(dao, storage, dialogService, socketProvider);
         Factory<?> factory = new CommandFactory(new HashMap<String, Command>(){{
             put("signup", new SignUpCommand().withService(service));
+            put("signin", new SignInCommand().withService(service));
         }}).withDefaultValue(new DefaultCommand().withService(service));
 
         parser = new ClientMessageParserImpl(factory);
 
-        try {
-            Command<?> command = parser.parseInput(json);
-            command.handle();
-        } catch (RuntimeException e) {
-            System.out.println("Name is already used. Please try another.");
-        }
+        dialogService.start();
+
+        parser.parseInput("{ \"users\" : [] }");
+//        try {
+//            Command<?> command = parser.parseInput(json);
+//            command.handle();
+//        } catch (RuntimeException e) {
+//            System.out.println("Name is already used. Please try another.");
+//        }
 
     }
 
