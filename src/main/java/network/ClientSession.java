@@ -56,7 +56,7 @@ public class ClientSession {
             preparedResponse = parser.prepareResponse(response);
         } catch (RuntimeException | IOException e) {
             logger.info("Error occurs while handling client's input. Cause: " + e.getMessage());
-            preparedResponse = "{\"status\":\"FAIL\"}";
+            preparedResponse = "{\"status\":\"FAIL\"}" + System.lineSeparator();
         }
         writer.write(preparedResponse);
         writer.flush();

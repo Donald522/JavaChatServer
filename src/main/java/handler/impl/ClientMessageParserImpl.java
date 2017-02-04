@@ -37,6 +37,6 @@ public class ClientMessageParserImpl implements ClientMessageParser {
     public String prepareResponse(Object object) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        return mapper.writeValueAsString(object);
+        return mapper.writeValueAsString(object) + System.lineSeparator();
     }
 }
