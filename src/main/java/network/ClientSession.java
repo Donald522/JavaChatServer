@@ -4,11 +4,12 @@ import handler.ClientMessageParser;
 import model.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import service.StreamProvider;
+import service.impl.SocketStreamProvider;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.Writer;
 import java.net.Socket;
 
 /**
@@ -29,12 +30,12 @@ public class ClientSession {
     }
 
     public void run() {
-        try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(
-                            new BufferedInputStream(
-                                    this.socket.getInputStream()), "UTF-8"))) {
+        StreamProvider socketStreamProvider = new SocketStreamProvider();
+        try (BufferedReader reader = (BufferedReader) socketStreamProvider.getReader(socket);
+             Writer writer = socketStreamProvider.getWriter(socket)
+        ) {
             while (true) {
-                if (processClient(reader)) {
+                if (!processClient(reader, writer)) {
                     break;
                 }
             }
@@ -43,18 +44,22 @@ public class ClientSession {
         }
     }
 
-    private boolean processClient(BufferedReader reader) throws IOException {
+    private boolean processClient(BufferedReader reader, Writer writer) throws IOException {
         String line = reader.readLine();
+        String preparedResponse;
         if(line == null) {
-            return true;
+            return false;
         }
         try {
             Command<?> command = parser.parseInput(line);
-            command.handle();
+            Response response = command.handle();
+            preparedResponse = parser.prepareResponse(response);
         } catch (RuntimeException | IOException e) {
             logger.info("Error occurs while handling client's input. Cause: " + e.getMessage());
-            // send a response to the client. Format of response will be agreed later.
+            preparedResponse = "{\"status\":\"FAIL\"}";
         }
-        return false;
+        writer.write(preparedResponse);
+        writer.flush();
+        return true;
     }
 }

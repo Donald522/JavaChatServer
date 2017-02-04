@@ -13,4 +13,6 @@ public interface ClientMessageParser {
 
     Command<?> parseInput(String jsonString) throws IOException;
 
+    String prepareResponse(Object object) throws IOException;
+
 }

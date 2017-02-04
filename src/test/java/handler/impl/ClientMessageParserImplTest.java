@@ -1,5 +1,6 @@
 package handler.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import model.command.AbstractCommand;
 import model.command.Argument;
 import model.command.Command;
@@ -8,11 +9,13 @@ import model.dialog.Dialog;
 import model.dialog.Message;
 import model.user.Credentials;
 import model.user.User;
+import network.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import service.ClientSessionService;
 import util.Factory;
+import util.RequestStatus;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -83,7 +86,7 @@ class ClientMessageParserImplTest {
     }
 
     @Test
-    void test() throws IOException {
+    void testSendMessageCommand() throws IOException {
         String json = "{\"COMMAND\":\"sendmsg\", \"MESSAGE\":\"Hello\", \"DIALOG_ID\":\"-724451199\"}";
         AbstractCommand<Message> expected = new SendMessageCommand();
         Message message = Message.newBuilder()
@@ -93,6 +96,38 @@ class ClientMessageParserImplTest {
         expected.setArgument(new Argument<>(message));
         Command<?> actual = clientMessageParser.parseInput(json);
         assertEquals(expected, actual, "SendMessage should be returned");
+    }
+
+    @Test
+    void testResponsePreparationIfMessageExistAndEmpty() throws JsonProcessingException {
+        Response response = Response.newBuilder()
+                .setStatus(RequestStatus.FAIL)
+                .setMessage("")
+                .build();
+        String expected = "{\"status\":\"FAIL\",\"message\":\"\"}";
+        String actual = clientMessageParser.prepareResponse(response);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testResponsePreparationIfMessageExist() throws JsonProcessingException {
+        Response response = Response.newBuilder()
+                .setStatus(RequestStatus.FAIL)
+                .setMessage("Some very useful text")
+                .build();
+        String expected = "{\"status\":\"FAIL\",\"message\":\"Some very useful text\"}";
+        String actual = clientMessageParser.prepareResponse(response);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testResponsePreparationIfMessageNotExist() throws JsonProcessingException {
+        Response response = Response.newBuilder()
+                .setStatus(RequestStatus.OK)
+                .build();
+        String expected = "{\"status\":\"OK\"}";
+        String actual = clientMessageParser.prepareResponse(response);
+        assertEquals(expected, actual);
     }
 
 }

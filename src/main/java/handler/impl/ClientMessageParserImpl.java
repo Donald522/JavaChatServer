@@ -1,5 +1,7 @@
 package handler.impl;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import handler.ClientMessageParser;
@@ -29,5 +31,12 @@ public class ClientMessageParserImpl implements ClientMessageParser {
         Map<JsonNodes, ?> nodes = mapper.readValue(jsonString, new TypeReference<Map<JsonNodes,?>>(){});
         Command<?> command = (Command<?>) factory.getObject((String) nodes.get(JsonNodes.COMMAND));
         return command.withArguments(nodes);
+    }
+
+    @Override
+    public String prepareResponse(Object object) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        return mapper.writeValueAsString(object);
     }
 }

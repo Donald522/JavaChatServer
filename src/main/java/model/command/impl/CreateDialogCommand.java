@@ -5,7 +5,9 @@ import model.command.Argument;
 import model.command.Command;
 import model.dialog.Dialog;
 import model.user.User;
+import network.Response;
 import util.JsonNodes;
+import util.RequestStatus;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,8 +22,11 @@ import java.util.Map;
 public class CreateDialogCommand extends AbstractCommand<Dialog> {
 
     @Override
-    public void handle() {
+    public Response handle() {
         service.createNewDialog(argument.getArgument());
+        return Response.newBuilder()
+                .setStatus(RequestStatus.OK)
+                .build();
     }
 
     @Override

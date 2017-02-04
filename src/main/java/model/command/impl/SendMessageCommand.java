@@ -4,7 +4,9 @@ import model.command.AbstractCommand;
 import model.command.Argument;
 import model.command.Command;
 import model.dialog.Message;
+import network.Response;
 import util.JsonNodes;
+import util.RequestStatus;
 
 import java.util.Map;
 
@@ -15,8 +17,11 @@ import java.util.Map;
 
 public class SendMessageCommand extends AbstractCommand<Message> {
     @Override
-    public void handle() {
+    public Response handle() {
         service.sendMessage(argument.getArgument());
+        return Response.newBuilder()
+                .setStatus(RequestStatus.OK)
+                .build();
     }
 
     @Override

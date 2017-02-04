@@ -4,7 +4,9 @@ import model.command.AbstractCommand;
 import model.command.Argument;
 import model.command.Command;
 import model.user.Credentials;
+import network.Response;
 import util.JsonNodes;
+import util.RequestStatus;
 
 import java.util.Map;
 
@@ -16,12 +18,19 @@ import java.util.Map;
 public class SignUpCommand extends AbstractCommand<Credentials> {
 
     @Override
-    public void handle() {
+    public Response handle() {
+        RequestStatus status = RequestStatus.OK;
+        String message = "";
         boolean response;
         response = service.signUpUser(argument.getArgument());
         if(!response) {
-            throw new RuntimeException("Name is already used");
+            status = RequestStatus.FAIL;
+            message = "Name is already used";
         }
+        return Response.newBuilder()
+                .setStatus(status)
+                .setMessage(message)
+                .build();
     }
 
     @Override

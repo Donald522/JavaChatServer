@@ -4,7 +4,9 @@ import model.command.AbstractCommand;
 import model.command.Argument;
 import model.command.Command;
 import model.user.Credentials;
+import network.Response;
 import util.JsonNodes;
+import util.RequestStatus;
 
 import java.util.Map;
 
@@ -15,12 +17,19 @@ import java.util.Map;
 
 public class SignInCommand extends AbstractCommand<Credentials> {
     @Override
-    public void handle() {
+    public Response handle() {
+        RequestStatus status = RequestStatus.OK;
+        String message = "";
         boolean response;
         response = service.signInUser(argument.getArgument());
         if(!response) {
-            throw new RuntimeException("Unknown user or incorrect password");
+            status = RequestStatus.FAIL;
+            message = "Unknown user or incorrect password";
         }
+        return Response.newBuilder()
+                .setStatus(status)
+                .setMessage(message)
+                .build();
     }
 
     @Override

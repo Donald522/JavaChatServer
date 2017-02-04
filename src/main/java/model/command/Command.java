@@ -1,5 +1,7 @@
 package model.command;
 
+import network.Response;
+
 import java.util.Map;
 
 /**
@@ -9,7 +11,7 @@ import java.util.Map;
 
 public interface Command<T> {
 
-    void handle();
+    Response handle();
 
     Command<T>  withArguments(Map<?, ?> args);
 

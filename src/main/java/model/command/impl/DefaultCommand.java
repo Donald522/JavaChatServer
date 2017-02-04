@@ -3,6 +3,8 @@ package model.command.impl;
 import model.command.AbstractCommand;
 import model.command.Argument;
 import model.command.Command;
+import network.Response;
+import util.RequestStatus;
 
 import java.util.Map;
 
@@ -14,8 +16,11 @@ import java.util.Map;
 public class DefaultCommand extends AbstractCommand<Object> {
 
     @Override
-    public void handle() {
+    public Response handle() {
         service.handleDefaultCommand();
+        return Response.newBuilder()
+                .setStatus(RequestStatus.OK)
+                .build();
     }
 
     @Override
