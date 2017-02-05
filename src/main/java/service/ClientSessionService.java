@@ -14,6 +14,8 @@ public interface ClientSessionService {
 
     User getUserByName(String username);
 
+    User getCurrentUser();
+
     boolean signUpUser(Credentials credentials);
 
     boolean signInUser(Credentials credentials);

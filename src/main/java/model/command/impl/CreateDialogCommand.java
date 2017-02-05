@@ -23,23 +23,26 @@ public class CreateDialogCommand extends AbstractCommand<Dialog> {
 
     @Override
     public Response handle() {
-        service.createNewDialog(argument.getArgument());
+        boolean newDialog = service.createNewDialog(argument.getArgument());
         return Response.newBuilder()
-                .setStatus(RequestStatus.OK)
+                .setStatus(newDialog ? RequestStatus.OK : RequestStatus.FAIL)
                 .build();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Command<Dialog> withArguments(Map<?, ?> args) {
-        List<User> users = new ArrayList<>();
         try {
             List<String> usernames = new ArrayList<>((Collection<String>) args.get(JsonNodes.USERS));
+            List<User> users = new ArrayList<>(usernames.size() + 1);
             for (String username : usernames) {
                 User user = service.getUserByName(username);
                 users.add(user);
             }
+            User currentUser = service.getCurrentUser();
+            users.add(currentUser);
             Dialog dialog = new Dialog(users);
+            dialog.setLeader(currentUser);
             setArgument(new Argument<>(dialog));
         } catch (ClassCastException e) {
             throw new RuntimeException("Not a list of users passed", e);

@@ -18,9 +18,9 @@ import java.util.Map;
 public class SendMessageCommand extends AbstractCommand<Message> {
     @Override
     public Response handle() {
-        service.sendMessage(argument.getArgument());
+        boolean sendMessage = service.sendMessage(argument.getArgument());
         return Response.newBuilder()
-                .setStatus(RequestStatus.OK)
+                .setStatus(sendMessage ? RequestStatus.OK : RequestStatus.FAIL)
                 .build();
     }
 
@@ -29,6 +29,7 @@ public class SendMessageCommand extends AbstractCommand<Message> {
         Message message = Message.newBuilder()
                 .setDialogId(Integer.parseInt((String) args.get(JsonNodes.DIALOG_ID)))
                 .setMessage((String) args.get(JsonNodes.MESSAGE))
+                .setFromUser(service.getCurrentUser())
                 .build();
         setArgument(new Argument<>(message));
         return this;

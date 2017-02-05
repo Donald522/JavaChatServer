@@ -16,6 +16,8 @@ public interface DialogService {
 
     void start();
 
+    Dialog getDialogById(Integer dialogId);
+
     boolean createNewDialog(Dialog dialog);
 
     boolean addUserToDialog(Pair<Integer, User> newUser);

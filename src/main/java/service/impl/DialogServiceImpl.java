@@ -33,6 +33,11 @@ public class DialogServiceImpl implements DialogService {
     }
 
     @Override
+    public Dialog getDialogById(Integer dialogId) {
+        return dialogs.get(dialogId);
+    }
+
+    @Override
     public boolean createNewDialog(Dialog dialog) {
         return dialogs.putIfAbsent(dialog.getId(), dialog) == null;
     }

@@ -43,6 +43,11 @@ public class ClientSessionServiceImpl implements ClientSessionService {
     }
 
     @Override
+    public User getCurrentUser() {
+        return storage.getCurrentUser();
+    }
+
+    @Override
     public boolean signUpUser(Credentials credentials) {
         logger.info("Request on register new user {}", credentials);
         if(storage.getUser(credentials.getName()) != null) {
@@ -76,6 +81,7 @@ public class ClientSessionServiceImpl implements ClientSessionService {
             return true;
         }
         user.setStatus(Status.ONLINE);
+        storage.addActiveUser(user);
         logger.info("User {} signed in successfully", user);
         return true;
     }
@@ -88,6 +94,10 @@ public class ClientSessionServiceImpl implements ClientSessionService {
     @Override
     public boolean createNewDialog(Dialog dialog) {
         logger.info("Request on create new dialog with users {}", dialog.getUsers());
+        if(dialog.getLeader() == null) {
+            logger.warn("Attempt to create dialog from unknown user");
+            return false;
+        }
         boolean response = dialogService.createNewDialog(dialog);
         if(!response) {
             logger.info("Failed to create new dialog #{}. Dialog already exists", dialog.getId());
@@ -98,6 +108,16 @@ public class ClientSessionServiceImpl implements ClientSessionService {
 
     @Override
     public boolean sendMessage(Message message) {
+        User fromUser = message.getFromUser();
+        if(fromUser == null) {
+            logger.warn("Attempt to send message from unknown user");
+            return false;
+        }
+        Dialog dialog = dialogService.getDialogById(message.getDialogId());
+        if(!dialog.getUsers().contains(fromUser)) {
+            logger.warn("User {} send message to dialog where he doesn't exist.", fromUser);
+            return false;
+        }
         return dialogService.sendMessage(message);
     }
 

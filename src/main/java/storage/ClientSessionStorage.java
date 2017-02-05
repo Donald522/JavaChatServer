@@ -33,9 +33,12 @@ public class ClientSessionStorage implements Refreshable {
     @GuardedBy("lock")
     private Map<String, User> usersCache;
 
+    private Map<Long, User> onlineUsers;
+
     public ClientSessionStorage(ClientSessionDao clientSessionDao) throws RefreshFailedException {
         this.clientSessionDao = clientSessionDao;
         usersCache = new HashMap<>();
+        onlineUsers = new ConcurrentHashMap<>();
         refresh();
     }
 
@@ -78,5 +81,17 @@ public class ClientSessionStorage implements Refreshable {
         clientSessionDao.storeUser(user);
         usersCache.put(user.getName(), user);
         lock.unlock();
+    }
+
+    public void addActiveUser(User user) {
+        User old = onlineUsers.put(Thread.currentThread().getId(), user);
+        if(old != null) {
+            logger.info("User {} was removed from online users", old);
+        }
+        logger.info("User {} was added to online users", user);
+    }
+
+    public User getCurrentUser() {
+        return onlineUsers.get(Thread.currentThread().getId());
     }
 }

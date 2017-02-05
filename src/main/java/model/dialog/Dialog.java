@@ -17,6 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Dialog {
 
     private int id;
+    private User leader;
     private List<User> users;
     private BlockingQueue<Message> messages;
 
@@ -54,6 +55,14 @@ public class Dialog {
         return users;
     }
 
+    public User getLeader() {
+        return leader;
+    }
+
+    public void setLeader(User leader) {
+        this.leader = leader;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -71,6 +80,7 @@ public class Dialog {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("id", id)
+                .add("leader", leader)
                 .add("users", users)
                 .toString();
     }

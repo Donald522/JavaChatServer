@@ -7,6 +7,10 @@
 {"COMMAND":"signup", "USERNAME":"user3", "PASSWORD":"pass3"}
 {"COMMAND":"signin", "USERNAME":"user3", "PASSWORD":"pass3"}
 
-{"COMMAND":"newdlg", "USERS":["user1", "user2"]}
+{"COMMAND":"newdlg", "USERS":["user2", "user3"]}
+{"COMMAND":"newdlg", "USERS":["user2"]}
 
 {"COMMAND":"sendmsg", "MESSAGE":"Hello", "DIALOG_ID":"-724451199"}
+
+{"COMMAND":"sendmsg", "MESSAGE":"Hello", "DIALOG_ID":"-724451169"}
+{"COMMAND":"sendmsg", "MESSAGE":"Hello from user3", "DIALOG_ID":"-724451169"}
