@@ -2,6 +2,7 @@ package service.impl;
 
 import model.dialog.Dialog;
 import model.dialog.Message;
+import model.user.Status;
 import model.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,7 +41,9 @@ public class MessageSenderImpl implements MessageSender {
     @Override
     public void send(Message message, Dialog dialog) {
         List<User> users = dialog.getUsers();
-        users.forEach((user) -> {
+        users.stream()
+                .filter((user) -> user.getStatus() != Status.OFFLINE)
+                .forEach((user) -> {
             Set<Socket> sockets = user.getSockets();
             sockets.forEach((socket) -> {
                 try {
@@ -61,6 +64,7 @@ public class MessageSenderImpl implements MessageSender {
                 Message message = dialog.getMessages().poll();
                 if (message != null) {
                     send(message, dialog);
+                    //TODO: also save to database
                 }
             });
         }
