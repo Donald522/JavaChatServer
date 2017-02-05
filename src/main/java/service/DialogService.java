@@ -24,6 +24,8 @@ public interface DialogService {
 
     boolean deleteUserFromDialog(Pair<Integer, User> userToDelete);
 
+    boolean deleteDialog(Dialog dialog);
+
     boolean sendMessage(Message message);
 
 }

@@ -61,7 +61,18 @@ public class DialogServiceImpl implements DialogService {
         if(!dialogs.keySet().contains(dialogId)) {
             return false;
         }
-        return dialogs.get(dialogId).deleteUser(userToDelete.getValue());
+        Dialog dialog = dialogs.get(dialogId);
+        boolean deleteUser = dialog.deleteUser(userToDelete.getValue());
+        if(dialog.getUsers().isEmpty()) {
+            boolean deleteDialog = deleteDialog(dialog);
+            deleteUser &= deleteDialog;
+        }
+        return deleteUser;
+    }
+
+    @Override
+    public boolean deleteDialog(Dialog dialog) {
+        return dialogs.remove(dialog.getId()) == dialog;
     }
 
     @Override
