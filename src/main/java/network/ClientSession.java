@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 /**
  * Created by Anton Tolkachev.
@@ -34,7 +35,7 @@ public class ClientSession {
         try (BufferedReader reader = (BufferedReader) socketStreamProvider.getReader(socket);
              Writer writer = socketStreamProvider.getWriter(socket)
         ) {
-            while (true) {
+            while (!Thread.interrupted()) {
                 if (!processClient(reader, writer)) {
                     break;
                 }
@@ -42,18 +43,22 @@ public class ClientSession {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        logger.info("Thread {} was interrupted because socket is disconnected", Thread.currentThread().getId());
     }
 
     private boolean processClient(BufferedReader reader, Writer writer) throws IOException {
-        String line = reader.readLine();
         String preparedResponse;
-        if(line == null) {
-            return false;
-        }
         try {
+            String line = reader.readLine();
+            if(line == null) {
+                return false;
+            }
             Command<?> command = parser.parseInput(line);
             Response response = command.handle();
             preparedResponse = parser.prepareResponse(response);
+        } catch(SocketTimeoutException e) {
+            logger.info("No input from socket {} for 1 minute", socket);
+            return true;
         } catch (RuntimeException | IOException e) {
             logger.info("Error occurs while handling client's input. Cause: " + e.getMessage());
             preparedResponse = "{\"status\":\"FAIL\"}" + System.lineSeparator();

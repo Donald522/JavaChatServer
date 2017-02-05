@@ -79,6 +79,7 @@ public class Server {
         logger.info("Server started");
         while (!serverSocket.isClosed()) {
             final Socket client = serverSocket.accept();
+            client.setSoTimeout(60_000);
             executorService.execute(() -> {
                 socketProvider.setSocket(client);
                 new ClientSession(client, parser).run();
