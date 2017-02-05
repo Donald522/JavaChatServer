@@ -5,9 +5,9 @@ import model.user.User;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by Anton Tolkachev.
@@ -22,7 +22,7 @@ public class Dialog {
 
     public Dialog(List<User> users) {
         this.users = new CopyOnWriteArrayList<>(users);
-        messages = new LinkedBlockingQueue<>(100);
+        messages = new ArrayBlockingQueue<>(100);
         id = hashCode() % Integer.MAX_VALUE;
     }
 
