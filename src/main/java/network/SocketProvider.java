@@ -28,4 +28,8 @@ public class SocketProvider {
         sockets.put(Thread.currentThread().getId(), socket);
         lock.unlock();
     }
+
+    public boolean contains() {
+        return sockets.containsKey(Thread.currentThread().getId());
+    }
 }
