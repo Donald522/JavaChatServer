@@ -16,4 +16,6 @@ public interface StreamProvider {
 
     Writer getWriter(Closeable to) throws IOException;
 
+    boolean isBuffered();
+
 }

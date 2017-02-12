@@ -32,4 +32,9 @@ public class SocketStreamProvider implements StreamProvider {
                 )
         );
     }
+
+    @Override
+    public boolean isBuffered() {
+        return true;
+    }
 }
