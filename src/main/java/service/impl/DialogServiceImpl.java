@@ -2,7 +2,10 @@ package service.impl;
 
 import model.dialog.Dialog;
 import model.dialog.Message;
+import model.network.Sendable;
+import model.network.impl.DecoratedMessage;
 import model.user.User;
+import network.sender.Sender;
 import org.apache.commons.lang3.tuple.Pair;
 import service.DialogService;
 import service.MessageSender;
@@ -22,9 +25,9 @@ public class DialogServiceImpl implements DialogService {
 
     private MessageSender messageSender;
 
-    public DialogServiceImpl() {
+    public DialogServiceImpl(Sender sender) {
         this.dialogs = new ConcurrentHashMap<>();
-        this.messageSender = new MessageSenderImpl(dialogs.values());
+        this.messageSender = new MessageSenderImpl(sender, dialogs.values());
     }
 
     @Override
@@ -86,7 +89,8 @@ public class DialogServiceImpl implements DialogService {
         if(!dialogs.keySet().contains(dialogId)) {
             return false;
         }
-        return dialogs.get(dialogId).addMessage(message);
+        Sendable decoratedMessage = new DecoratedMessage(message);
+        return dialogs.get(dialogId).addMessage(decoratedMessage);
     }
 
 }

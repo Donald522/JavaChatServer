@@ -1,7 +1,7 @@
 package service;
 
 import model.dialog.Dialog;
-import model.dialog.Message;
+import model.network.Sendable;
 
 /**
  * Created by Anton Tolkachev.
@@ -10,6 +10,6 @@ import model.dialog.Message;
 
 public interface MessageSender extends Runnable {
 
-    void send(Message message, Dialog dialog);
+    void send(Sendable message, Dialog dialog);
 
 }

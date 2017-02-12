@@ -1,6 +1,7 @@
 package model.dialog;
 
 import com.google.common.base.MoreObjects;
+import model.network.Sendable;
 import model.user.User;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class Dialog {
     private int id;
     private User leader;
     private List<User> users;
-    private BlockingQueue<Message> messages;
+    private BlockingQueue<Sendable> messages;
 
     public Dialog(List<User> users) {
         this.users = new CopyOnWriteArrayList<>(users);
@@ -39,7 +40,7 @@ public class Dialog {
         return users.remove(user);
     }
 
-    public boolean addMessage(Message message) {
+    public boolean addMessage(Sendable message) {
         return messages.offer(message);
     }
 
@@ -47,7 +48,7 @@ public class Dialog {
         return id;
     }
 
-    public BlockingQueue<Message> getMessages() {
+    public BlockingQueue<Sendable> getMessages() {
         return messages;
     }
 
