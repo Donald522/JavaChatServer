@@ -1,6 +1,6 @@
 package model.command;
 
-import network.Response;
+import model.network.impl.Response;
 
 import java.util.Map;
 

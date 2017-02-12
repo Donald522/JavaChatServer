@@ -1,28 +1,46 @@
-package network;
+package model.network.impl;
 
-import com.google.common.base.MoreObjects;
+import model.network.Sendable;
+import model.network.TcpPackets;
+import org.apache.commons.lang3.StringUtils;
 import util.RequestStatus;
 
 /**
  * Created by Anton Tolkachev.
- * Since 04.02.17
+ * Since 12.02.17
  */
 
-public class Response {
+public final class Response implements Sendable {
 
-    private RequestStatus status;
-    private String message;
+    private final TcpPackets header = TcpPackets.RESPONSE;
+    private RequestStatus status = RequestStatus.OK;
+    private String message = StringUtils.EMPTY;
+
+    public Response() {
+    }
 
     public static Response.Builder newBuilder() {
         return new Response().new Builder();
+    }
+
+    public TcpPackets getHeader() {
+        return header;
     }
 
     public RequestStatus getStatus() {
         return status;
     }
 
+    public void setStatus(RequestStatus status) {
+        this.status = status;
+    }
+
     public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public class Builder {
@@ -44,11 +62,4 @@ public class Response {
         }
     }
 
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("status", status)
-                .add("message", message)
-                .toString();
-    }
 }

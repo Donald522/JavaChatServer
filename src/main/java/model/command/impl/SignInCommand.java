@@ -3,8 +3,8 @@ package model.command.impl;
 import model.command.AbstractCommand;
 import model.command.Argument;
 import model.command.Command;
+import model.network.impl.Response;
 import model.user.Credentials;
-import network.Response;
 import util.JsonNodes;
 import util.RequestStatus;
 

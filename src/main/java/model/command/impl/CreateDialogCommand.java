@@ -4,8 +4,8 @@ import model.command.AbstractCommand;
 import model.command.Argument;
 import model.command.Command;
 import model.dialog.Dialog;
+import model.network.impl.Response;
 import model.user.User;
-import network.Response;
 import util.JsonNodes;
 import util.RequestStatus;
 

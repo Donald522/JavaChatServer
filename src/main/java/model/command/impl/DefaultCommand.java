@@ -3,7 +3,7 @@ package model.command.impl;
 import model.command.AbstractCommand;
 import model.command.Argument;
 import model.command.Command;
-import network.Response;
+import model.network.impl.Response;
 import util.RequestStatus;
 
 import java.util.Map;

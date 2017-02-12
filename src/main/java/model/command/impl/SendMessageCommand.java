@@ -4,7 +4,7 @@ import model.command.AbstractCommand;
 import model.command.Argument;
 import model.command.Command;
 import model.dialog.Message;
-import network.Response;
+import model.network.impl.Response;
 import util.JsonNodes;
 import util.RequestStatus;
 
