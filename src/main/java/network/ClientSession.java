@@ -1,15 +1,14 @@
 package network;
 
-import handler.ClientMessageParser;
 import model.command.Command;
+import model.network.impl.Response;
+import network.receiver.Receiver;
+import network.sender.Sender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import service.StreamProvider;
-import service.impl.SocketStreamProvider;
+import util.RequestStatus;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Writer;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
@@ -23,48 +22,57 @@ public class ClientSession {
     private static final Logger logger = LogManager.getLogger(ClientSession.class);
 
     private final Socket socket;
-    private final ClientMessageParser parser;
+    private final Sender sender;
+    private final Receiver receiver;
 
-    public ClientSession(Socket socket, ClientMessageParser parser) {
+    public ClientSession(Socket socket, Sender sender, Receiver receiver) {
         this.socket = socket;
-        this.parser = parser;
+        this.sender = sender;
+        this.receiver = receiver;
     }
 
     public void run() {
-        StreamProvider socketStreamProvider = new SocketStreamProvider();
-        try (BufferedReader reader = (BufferedReader) socketStreamProvider.getReader(socket);
-             Writer writer = socketStreamProvider.getWriter(socket)
-        ) {
+        try {
+            mainLoop();
+        } catch (IOException e) {
+            logger.warn("Error happened when closing client's socket. Returning.");
+        }
+    }
+
+    private void mainLoop() throws IOException {
+        try {
             while (!Thread.interrupted()) {
-                if (!processClient(reader, writer)) {
+                if (!processClient()) {
                     break;
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.info("Error during client processing. Cause: " + e.getMessage());
+        } finally {
+            socket.close();
         }
         logger.info("Thread {} was interrupted because socket is disconnected", Thread.currentThread().getId());
     }
 
-    private boolean processClient(BufferedReader reader, Writer writer) throws IOException {
-        String preparedResponse;
+    private boolean processClient() throws IOException {
         try {
-            String line = reader.readLine();
-            if(line == null) {
+            Command<?> command = receiver.receive(socket);
+            if(command == null) {
                 return false;
             }
-            Command<?> command = parser.parseInput(line);
             Response response = command.handle();
-            preparedResponse = parser.prepareResponse(response);
+            sender.send(socket, response);
         } catch(SocketTimeoutException e) {
             logger.info("No input from socket {} for 1 minute", socket);
             return true;
         } catch (RuntimeException | IOException e) {
             logger.info("Error occurs while handling client's input. Cause: " + e.getMessage());
-            preparedResponse = "{\"status\":\"FAIL\"}" + System.lineSeparator();
+            Response response = Response.newBuilder()
+                    .setStatus(RequestStatus.FAIL)
+                    .setMessage(e.getMessage())
+                    .build();
+            sender.send(socket, response);
         }
-        writer.write(preparedResponse);
-        writer.flush();
         return true;
     }
 }

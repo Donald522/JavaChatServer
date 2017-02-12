@@ -8,12 +8,18 @@ import handler.impl.ClientMessageParserImpl;
 import model.command.Command;
 import model.command.factory.CommandFactory;
 import model.command.impl.*;
+import network.receiver.Receiver;
+import network.receiver.impl.SimpleReceiver;
+import network.sender.Sender;
+import network.sender.impl.SimpleSender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import service.ClientSessionService;
 import service.DialogService;
+import service.StreamProvider;
 import service.impl.ClientSessionServiceImpl;
 import service.impl.DialogServiceImpl;
+import service.impl.SocketStreamProvider;
 import storage.ClientSessionStorage;
 import util.Factory;
 
@@ -36,38 +42,46 @@ public class Server {
 
     private static final int DEFAULT_PORT = 7788;
     private static final String PATH = "src/main/resources/database.properties";
-
     private ServerSocket serverSocket;
-    private int port;
 
+    private int port;
     private DataSourceProvider dataSourceProvider;
+
     private ClientSessionDao dao;
     private ClientSessionStorage storage;
     private DialogService dialogService;
     private SocketProvider socketProvider;
+    private final StreamProvider streamProvider;
+    private Sender sender;
+    private Receiver receiver;
     private final ClientMessageParser parser;
     private ClientSessionService service;
+    private Factory<?> factory;
 
     private ExecutorService executorService = Executors.newCachedThreadPool();
 
     public Server(int port) throws IOException, RefreshFailedException {
+
         this.port = port;
         serverSocket = new ServerSocket(port);
-
         dataSourceProvider = new MysqlDataSourceProvider(PATH);
         dao = new ClientSessionDao(dataSourceProvider.getDataSource());
         storage = new ClientSessionStorage(dao);
-        dialogService = new DialogServiceImpl();
         socketProvider = new SocketProvider();
+        streamProvider = new SocketStreamProvider();
+        parser = new ClientMessageParserImpl();
+        sender = new SimpleSender(parser, streamProvider);
+        dialogService = new DialogServiceImpl(sender);
         service = new ClientSessionServiceImpl(dao, storage, dialogService, socketProvider);
-        Factory<?> factory = new CommandFactory(new HashMap<String, Command>(){{
+        factory = new CommandFactory(new HashMap<String, Command>(){{
             put("signup", new SignUpCommand().withService(service));
             put("signin", new SignInCommand().withService(service));
             put("newdlg", new CreateDialogCommand().withService(service));
             put("sendmsg", new SendMessageCommand().withService(service));
         }}).withDefaultValue(new DefaultCommand().withService(service));
 
-        parser = new ClientMessageParserImpl(factory);
+        receiver = new SimpleReceiver(streamProvider, parser, factory);
+
     }
 
     public Server() throws IOException, RefreshFailedException {
@@ -82,7 +96,7 @@ public class Server {
             client.setSoTimeout(60_000);
             executorService.execute(() -> {
                 socketProvider.setSocket(client);
-                new ClientSession(client, parser).run();
+                new ClientSession(client, sender, receiver).run();
             });
         }
         logger.info("Server is shutting down");

@@ -11,10 +11,15 @@ import model.command.impl.DefaultCommand;
 import model.command.impl.SignInCommand;
 import model.command.impl.SignUpCommand;
 import network.SocketProvider;
+import network.receiver.Receiver;
+import network.receiver.impl.SimpleReceiver;
+import network.sender.Sender;
+import network.sender.impl.SimpleSender;
 import service.ClientSessionService;
 import service.DialogService;
 import service.impl.ClientSessionServiceImpl;
 import service.impl.DialogServiceImpl;
+import service.impl.SocketStreamProvider;
 import storage.ClientSessionStorage;
 import util.Factory;
 
@@ -48,25 +53,30 @@ public class Runner {
         ClientSessionStorage storage;
         DialogService dialogService;
         SocketProvider socketProvider;
+        SocketStreamProvider streamProvider;
+        Sender sender;
+        Receiver receiver;
         ClientMessageParser parser;
         ClientSessionService service;
 
         dataSourceProvider = new MysqlDataSourceProvider(path);
         dao = new ClientSessionDao(dataSourceProvider.getDataSource());
         storage = new ClientSessionStorage(dao);
-        dialogService = new DialogServiceImpl();
         socketProvider = new SocketProvider();
+        streamProvider = new SocketStreamProvider();
+        parser = new ClientMessageParserImpl();
+        sender = new SimpleSender(parser, streamProvider);
+        dialogService = new DialogServiceImpl(sender);
         service = new ClientSessionServiceImpl(dao, storage, dialogService, socketProvider);
         Factory<?> factory = new CommandFactory(new HashMap<String, Command>(){{
             put("signup", new SignUpCommand().withService(service));
             put("signin", new SignInCommand().withService(service));
         }}).withDefaultValue(new DefaultCommand().withService(service));
 
-        parser = new ClientMessageParserImpl(factory);
-
+        receiver = new SimpleReceiver(streamProvider, parser, factory);
         dialogService.start();
 
-        parser.parseInput("{ \"users\" : [] }");
+//        parser.parseInput("{ \"users\" : [] }");
 //        try {
 //            Command<?> command = parser.parseInput(json);
 //            command.handle();
