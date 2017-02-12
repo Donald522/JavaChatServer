@@ -5,8 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import handler.ClientMessageParser;
-import model.command.Command;
-import util.Factory;
 import util.JsonNodes;
 
 import java.io.IOException;
@@ -19,18 +17,13 @@ import java.util.Map;
 
 public class ClientMessageParserImpl implements ClientMessageParser {
 
-    private Factory<?> factory;
-
-    public ClientMessageParserImpl(Factory<?> factory) {
-        this.factory = factory;
+    public ClientMessageParserImpl() {
     }
 
     @Override
-    public Command<?> parseInput(String jsonString) throws IOException {
+    public Map<JsonNodes, ?> parse(String jsonString) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        Map<JsonNodes, ?> nodes = mapper.readValue(jsonString, new TypeReference<Map<JsonNodes,?>>(){});
-        Command<?> command = (Command<?>) factory.getObject((String) nodes.get(JsonNodes.COMMAND));
-        return command.withArguments(nodes);
+        return mapper.readValue(jsonString, new TypeReference<Map<JsonNodes,?>>(){});
     }
 
     @Override

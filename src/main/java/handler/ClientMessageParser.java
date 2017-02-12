@@ -1,8 +1,9 @@
 package handler;
 
-import model.command.Command;
+import util.JsonNodes;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Created by Anton Tolkachev.
@@ -11,7 +12,7 @@ import java.io.IOException;
 
 public interface ClientMessageParser {
 
-    Command<?> parseInput(String jsonString) throws IOException;
+    Map<JsonNodes, ?> parse(String jsonString) throws IOException;
 
     String prepareResponse(Object object) throws IOException;
 
