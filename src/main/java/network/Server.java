@@ -79,6 +79,7 @@ public class Server {
         factory = new CommandFactory(new HashMap<String, Command>(){{
             put("signup", new SignUpCommand().withService(service));
             put("signin", new SignInCommand().withService(service));
+            put("signout", new SignOutCommand().withService(service));
             put("newdlg", new CreateDialogCommand().withService(service));
             put("sendmsg", new SendMessageCommand().withService(service));
         }}).withDefaultValue(new DefaultCommand().withService(service));

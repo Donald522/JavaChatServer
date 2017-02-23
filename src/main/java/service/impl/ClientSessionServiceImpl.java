@@ -88,6 +88,23 @@ public class ClientSessionServiceImpl implements ClientSessionService {
     }
 
     @Override
+    public boolean signOut() {
+        User currentUser = getCurrentUser();
+        logger.info("Request on sign out user {}", currentUser);
+        if(currentUser.getStatus() == Status.OFFLINE) {
+            logger.warn("User {} is already offline", currentUser);
+            return false;
+        }
+        currentUser.setStatus(Status.OFFLINE);
+        User remove = storage.getOnlineUsers().remove(currentUser.getName());
+        if (remove != null) {
+            logger.info("User {} signed out successfully", currentUser);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void handleDefaultCommand() {
         logger.warn("Default command has been invoked");
     }

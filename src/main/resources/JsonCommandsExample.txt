@@ -1,11 +1,14 @@
 {"COMMAND":"signup", "USERNAME":"user1", "PASSWORD":"pass1"}
 {"COMMAND":"signin", "USERNAME":"user1", "PASSWORD":"pass1"}
+{"COMMAND":"signout", "USERNAME":"user1", "PASSWORD":"pass1"}
 
 {"COMMAND":"signup", "USERNAME":"user2", "PASSWORD":"pass2"}
 {"COMMAND":"signin", "USERNAME":"user2", "PASSWORD":"pass2"}
+{"COMMAND":"signout", "USERNAME":"user2", "PASSWORD":"pass2"}
 
 {"COMMAND":"signup", "USERNAME":"user3", "PASSWORD":"pass3"}
 {"COMMAND":"signin", "USERNAME":"user3", "PASSWORD":"pass3"}
+{"COMMAND":"signout", "USERNAME":"user3", "PASSWORD":"pass3"}
 
 {"COMMAND":"newdlg", "USERS":["user2", "user3"]}
 {"COMMAND":"newdlg", "USERS":["user2"]}

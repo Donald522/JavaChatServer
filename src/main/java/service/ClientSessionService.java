@@ -20,6 +20,8 @@ public interface ClientSessionService {
 
     boolean signInUser(Credentials credentials);
 
+    boolean signOut();
+
     void handleDefaultCommand();
 
     boolean createNewDialog(Dialog dialog);
