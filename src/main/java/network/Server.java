@@ -74,6 +74,7 @@ public class Server {
         streamProvider = new SocketStreamProvider();
         parser = new ClientMessageParserImpl();
         sender = new SimpleSender(parser, streamProvider);
+        socketProvider = new SocketProvider(sender);
         dialogService = new DialogServiceImpl(sender);
         service = new ClientSessionServiceImpl(dao, storage, dialogService, socketProvider);
         factory = new CommandFactory(new HashMap<String, Command>(){{
@@ -85,7 +86,6 @@ public class Server {
         }}).withDefaultValue(new DefaultCommand().withService(service));
 
         receiver = new SimpleReceiver(streamProvider, parser, factory);
-        socketProvider = new SocketProvider(sender);
 
         monitoringService = new MonitoringServiceImpl(storage);
 
