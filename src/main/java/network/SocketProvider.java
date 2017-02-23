@@ -1,11 +1,17 @@
 package network;
 
-import net.jcip.annotations.GuardedBy;
+import model.network.impl.Popup;
+import net.jodah.expiringmap.ExpirationListener;
+import net.jodah.expiringmap.ExpiringMap;
+import network.sender.Sender;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import util.RequestStatus;
 
+import java.io.IOException;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Anton Tolkachev.
@@ -14,22 +20,43 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class SocketProvider {
 
-    @GuardedBy("lock")
-    private Map<Long, Socket> sockets = new HashMap<>();
+    private static final Logger logger = LogManager.getLogger(SocketProvider.class);
 
-    private ReentrantLock lock = new ReentrantLock();
+    private final Sender sender;
+
+    public SocketProvider(Sender sender) {
+        this.sender = sender;
+    }
+
+    private Map<Long, Socket> socketsCache = ExpiringMap.builder()
+            .expiration(10, TimeUnit.SECONDS)
+            .expirationListener(new ExpirationListener<Long, Socket>() {
+                @Override
+                public void expired(Long aLong, Socket socket) {
+                    try {
+                        logger.info("Remove inactive socket from temporary cache.");
+                        sender.send(socket, Popup.newBuilder()
+                                .setStatus(RequestStatus.FAIL)
+                                .setMessage("Session closed")
+                                .build()
+                        );
+                        socket.close();
+                    } catch (IOException e) {
+                        logger.warn("Exception during closing socket");
+                    }
+                }
+            })
+            .build();
 
     public Socket getSocket() {
-        return sockets.remove(Thread.currentThread().getId());
+        return socketsCache.remove(Thread.currentThread().getId());
     }
 
     public void setSocket(Socket socket) {
-        lock.lock();
-        sockets.put(Thread.currentThread().getId(), socket);
-        lock.unlock();
+        socketsCache.put(Thread.currentThread().getId(), socket);
     }
 
     public boolean contains() {
-        return sockets.containsKey(Thread.currentThread().getId());
+        return socketsCache.containsKey(Thread.currentThread().getId());
     }
 }

@@ -71,7 +71,6 @@ public class Server {
         dataSourceProvider = new MysqlDataSourceProvider(PATH);
         dao = new ClientSessionDao(dataSourceProvider.getDataSource());
         storage = new ClientSessionStorage(dao);
-        socketProvider = new SocketProvider();
         streamProvider = new SocketStreamProvider();
         parser = new ClientMessageParserImpl();
         sender = new SimpleSender(parser, streamProvider);
@@ -85,6 +84,7 @@ public class Server {
         }}).withDefaultValue(new DefaultCommand().withService(service));
 
         receiver = new SimpleReceiver(streamProvider, parser, factory);
+        socketProvider = new SocketProvider(sender);
 
         monitoringService = new MonitoringServiceImpl(storage);
 

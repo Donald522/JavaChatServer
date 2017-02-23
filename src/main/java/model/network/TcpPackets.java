@@ -8,5 +8,6 @@ package model.network;
 public enum TcpPackets {
     REQUEST,
     MESSAGE,
-    RESPONSE
+    RESPONSE,
+    POPUP
 }

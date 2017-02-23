@@ -62,10 +62,10 @@ public class Runner {
         dataSourceProvider = new MysqlDataSourceProvider(path);
         dao = new ClientSessionDao(dataSourceProvider.getDataSource());
         storage = new ClientSessionStorage(dao);
-        socketProvider = new SocketProvider();
         streamProvider = new SocketStreamProvider();
         parser = new ClientMessageParserImpl();
         sender = new SimpleSender(parser, streamProvider);
+        socketProvider = new SocketProvider(sender);
         dialogService = new DialogServiceImpl(sender);
         service = new ClientSessionServiceImpl(dao, storage, dialogService, socketProvider);
         Factory<?> factory = new CommandFactory(new HashMap<String, Command>(){{
