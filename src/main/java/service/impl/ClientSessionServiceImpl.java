@@ -81,6 +81,7 @@ public class ClientSessionServiceImpl implements ClientSessionService {
             return true;
         }
         user.setStatus(Status.ONLINE);
+        Thread.currentThread().setName(user.getName());
         storage.addActiveUser(user);
         logger.info("User {} signed in successfully", user);
         return true;
