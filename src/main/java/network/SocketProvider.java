@@ -29,7 +29,7 @@ public class SocketProvider {
     }
 
     private Map<Long, Socket> socketsCache = ExpiringMap.builder()
-            .expiration(10, TimeUnit.SECONDS)
+            .expiration(5, TimeUnit.MINUTES)
             .expirationListener(new ExpirationListener<Long, Socket>() {
                 @Override
                 public void expired(Long aLong, Socket socket) {
