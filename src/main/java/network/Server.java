@@ -16,9 +16,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import service.ClientSessionService;
 import service.DialogService;
+import service.MonitoringService;
 import service.StreamProvider;
 import service.impl.ClientSessionServiceImpl;
 import service.impl.DialogServiceImpl;
+import service.impl.MonitoringServiceImpl;
 import service.impl.SocketStreamProvider;
 import storage.ClientSessionStorage;
 import util.Factory;
@@ -58,6 +60,8 @@ public class Server {
     private ClientSessionService service;
     private Factory<?> factory;
 
+    private MonitoringService monitoringService;
+
     private ExecutorService executorService = Executors.newCachedThreadPool();
 
     public Server(int port) throws IOException, RefreshFailedException {
@@ -82,6 +86,8 @@ public class Server {
 
         receiver = new SimpleReceiver(streamProvider, parser, factory);
 
+        monitoringService = new MonitoringServiceImpl(storage);
+
     }
 
     public Server() throws IOException, RefreshFailedException {
@@ -90,6 +96,7 @@ public class Server {
 
     public void start() throws IOException {
         dialogService.start();
+        monitoringService.start();
         logger.info("Server started");
         while (!serverSocket.isClosed()) {
             final Socket client = serverSocket.accept();
