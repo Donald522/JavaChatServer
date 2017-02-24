@@ -103,7 +103,7 @@ class ClientMessageParserImplTest {
                 .setStatus(RequestStatus.FAIL)
                 .setMessage("")
                 .build();
-        String expected = "{\"status\":\"FAIL\",\"message\":\"\"}";
+        String expected = "{\"header\":\"RESPONSE\",\"status\":\"FAIL\",\"message\":\"\"}\n";
         String actual = clientMessageParser.prepareResponse(response);
         assertEquals(expected, actual);
     }
@@ -114,7 +114,7 @@ class ClientMessageParserImplTest {
                 .setStatus(RequestStatus.FAIL)
                 .setMessage("Some very useful text")
                 .build();
-        String expected = "{\"status\":\"FAIL\",\"message\":\"Some very useful text\"}";
+        String expected = "{\"header\":\"RESPONSE\",\"status\":\"FAIL\",\"message\":\"Some very useful text\"}\n";
         String actual = clientMessageParser.prepareResponse(response);
         assertEquals(expected, actual);
     }
@@ -124,7 +124,7 @@ class ClientMessageParserImplTest {
         Response response = Response.newBuilder()
                 .setStatus(RequestStatus.OK)
                 .build();
-        String expected = "{\"status\":\"OK\"}";
+        String expected = "{\"header\":\"RESPONSE\",\"status\":\"OK\",\"message\":\"\"}\n";
         String actual = clientMessageParser.prepareResponse(response);
         assertEquals(expected, actual);
     }

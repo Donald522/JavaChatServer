@@ -2,7 +2,6 @@ package network;
 
 import network.sender.Sender;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,16 +27,14 @@ class SocketProviderTest {
     private Socket s1;
     private Socket s2;
 
-    Sender sender;
-
-    @BeforeAll
-    void mockSetUp() throws IOException {
-        sender = mock(Sender.class);
-        doNothing().when(sender).send(any(), any());
-    }
+    private Sender sender;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
+
+        sender = mock(Sender.class);
+        doNothing().when(sender).send(any(), any());
+
         socketProvider = new SocketProvider(sender);
         executorService = Executors.newCachedThreadPool();
         s1 = new Socket();
