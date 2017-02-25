@@ -17,3 +17,5 @@
 
 {"COMMAND":"sendmsg", "MESSAGE":"Hello", "DIALOG_ID":"-724451169"}
 {"COMMAND":"sendmsg", "MESSAGE":"Hello from user3", "DIALOG_ID":"-724451169"}
+
+{"COMMAND":"updpfl", "PROFILE":{"COUNTRY":"Russia", "INTERESTS":"cars, football, java"}}

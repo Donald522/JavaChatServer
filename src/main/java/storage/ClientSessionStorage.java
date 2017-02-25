@@ -1,6 +1,7 @@
 package storage;
 
 import dao.core.ClientSessionDao;
+import model.user.Profile;
 import model.user.User;
 import net.jcip.annotations.GuardedBy;
 import org.apache.logging.log4j.LogManager;
@@ -80,6 +81,13 @@ public class ClientSessionStorage implements Refreshable {
         lock.lock();
         clientSessionDao.storeUser(user);
         usersCache.put(user.getName(), user);
+        lock.unlock();
+    }
+
+    public void updateUserProfile(User user, Profile profile) {
+        lock.lock();
+        clientSessionDao.storeUserProfile(user, profile);
+        user.setProfile(profile);
         lock.unlock();
     }
 

@@ -83,6 +83,7 @@ public class Server {
             put("signout", new SignOutCommand().withService(service));
             put("newdlg", new CreateDialogCommand().withService(service));
             put("sendmsg", new SendMessageCommand().withService(service));
+            put("updpfl", new UpdateProfileCommand().withService(service));
         }}).withDefaultValue(new DefaultCommand().withService(service));
 
         receiver = new SimpleReceiver(streamProvider, parser, factory);

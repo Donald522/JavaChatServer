@@ -3,6 +3,7 @@ package service;
 import model.dialog.Dialog;
 import model.dialog.Message;
 import model.user.Credentials;
+import model.user.Profile;
 import model.user.User;
 
 /**
@@ -19,6 +20,8 @@ public interface ClientSessionService {
     boolean signUpUser(Credentials credentials);
 
     boolean signInUser(Credentials credentials);
+
+    boolean updateUserProfile(Profile profile);
 
     boolean signOut();
 

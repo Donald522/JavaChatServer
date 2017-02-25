@@ -4,6 +4,7 @@ import dao.core.ClientSessionDao;
 import model.dialog.Dialog;
 import model.dialog.Message;
 import model.user.Credentials;
+import model.user.Profile;
 import model.user.Status;
 import model.user.User;
 import network.SocketProvider;
@@ -86,6 +87,19 @@ public class ClientSessionServiceImpl implements ClientSessionService {
         Thread.currentThread().setName(user.getName());
         storage.addActiveUser(user);
         logger.info("User {} signed in successfully", user);
+        return true;
+    }
+
+    @Override
+    public boolean updateUserProfile(Profile profile) {
+        User currentUser = getCurrentUser();
+        if(currentUser == null) {
+            logger.warn("Attempt to update profile without signing in");
+            return false;
+        }
+        logger.info("Request from user {} on updating profile. New profile: {}", currentUser, profile);
+        storage.updateUserProfile(currentUser, profile);
+        logger.info("Profile for user {} has been updated", currentUser);
         return true;
     }
 

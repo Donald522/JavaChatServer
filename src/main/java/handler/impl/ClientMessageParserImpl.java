@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import handler.ClientMessageParser;
+import handler.mixin.UserMixIn;
+import model.user.User;
 import util.JsonNodes;
 
 import java.io.IOException;
@@ -30,6 +32,7 @@ public class ClientMessageParserImpl implements ClientMessageParser {
     public String prepareResponse(Object object) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.addMixIn(User.class, UserMixIn.class);
         return mapper.writeValueAsString(object) + System.lineSeparator();
     }
 }

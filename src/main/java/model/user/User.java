@@ -13,48 +13,27 @@ public class User {
 
     private int id;
     private String name;
-    private String password;
+    private transient String password;
 
     private Status status = Status.OFFLINE;
 
-    private Set<Socket> sockets = new HashSet<>();
+    private transient Set<Socket> sockets;
+
+    private Profile profile;
 
     public User(int id, String name, String password) {
         this.id = id;
         this.name = name;
         this.password = password;
+        this.sockets = new HashSet<>();
     }
 
     public User(String name, String password) {
-        this.name = name;
-        this.password = password;
-        this.id = hashCode();
+        this(Objects.hash(name), name, password);
     }
 
     public User(Credentials credentials) {
         this(credentials.getName(), credentials.getPassword());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(name, user.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                '}';
     }
 
     public int getId() {
@@ -85,28 +64,34 @@ public class User {
         this.sockets.add(socket);
     }
 
-    public static class Builder {
-        private int id;
-        private String name;
-        private String password;
-
-        public Builder setId(int id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder setName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder setPassword(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public User build() {
-            return new User(id, name, password);
-        }
+    public Profile getProfile() {
+        return profile;
     }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(name, user.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+
 }
