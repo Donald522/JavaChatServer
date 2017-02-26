@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <scm>
-        <developerConnection>scm:git:https://github.com/Donald522/JavaChatServer.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:Donald522/JavaChatServer.git</developerConnection>
     </scm>
 
     <groupId>org.anton</groupId>
