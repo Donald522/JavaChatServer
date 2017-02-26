@@ -42,8 +42,14 @@
         </plugins>
     </build>
 
-    <dependencies>
+    <distributionManagement>
+        <repository>
+            <id>localrepository</id>
+            <url>file:/home/anton/Progs/my/repository/</url>
+        </repository>
+    </distributionManagement>
 
+    <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
