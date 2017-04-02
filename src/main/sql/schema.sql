@@ -20,9 +20,11 @@ CREATE TABLE
 DROP TABLE IF EXISTS MSGR_APP.FRIENDS;
 CREATE TABLE
     MSGR_APP.FRIENDS (
+        pair_id         INTEGER NOT NULL AUTO_INCREMENT,
         user_1          VARCHAR(30) NOT NULL,
         user_2          VARCHAR(30) NOT NULL,
-        status          SMALLINT,
+        message         TEXT,
+        status          VARCHAR(10),
         INDEX (user_1, user_2),
         PRIMARY KEY (user_1, user_2),
         FOREIGN KEY (user_1) REFERENCES MSGR_APP.USERS(user_nickname),
