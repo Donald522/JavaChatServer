@@ -1,22 +1,22 @@
 package service;
 
-import model.contact.Request;
+import model.contact.Relation;
 import model.user.User;
 
 import java.util.Set;
 
 /**
  * Created by Anton Tolkachev.
- * Since 10.01.17
+ * Since 01.04.17
  */
 
 public interface ContactService {
 
-    boolean request(Request request);
+    boolean request(Relation request);
 
-    boolean approve(Request request);
+    boolean approve(Relation request);
 
-    boolean reject(Request request);
+    boolean reject(Relation request);
 
     Set<User> getContacts(User user);
 
