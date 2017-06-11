@@ -1,6 +1,7 @@
 package service;
 
 import model.contact.Relation;
+import model.contact.RelationRequest;
 import model.user.User;
 
 import java.util.Set;
@@ -12,13 +13,19 @@ import java.util.Set;
 
 public interface ContactService {
 
-    boolean request(Relation request);
+    boolean request(RelationRequest request);
 
-    boolean approve(Relation request);
+    boolean approve(RelationRequest request);
 
-    boolean reject(Relation request);
+    boolean reject(RelationRequest request);
+
+    boolean removeContact(Relation relation);
 
     Set<User> getContacts(User user);
+
+    Set<RelationRequest> getInboundRequests(User user);
+
+    Set<RelationRequest> getOutboundRequests(User user);
 
     Set<User> findContactsByName(String name);
 
