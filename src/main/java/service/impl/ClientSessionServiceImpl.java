@@ -186,7 +186,7 @@ public class ClientSessionServiceImpl implements ClientSessionService {
 
     @Override
     public boolean rejectRequest(RelationRequest request) {
-        return contactService.request(request);
+        return contactService.reject(request);
     }
 
     @Override
