@@ -5,17 +5,21 @@ import com.google.common.base.Objects;
 
 /**
  * Created by Anton Tolkachev.
- * Since 02.04.17
+ * Since 01.04.17
  */
 
-public final class Relation {
+public class RelationRequest {
 
     private final String first;
     private final String second;
+    private final String message;
+    private final int status;
 
-    private Relation(Builder builder) {
+    private RelationRequest(Builder builder) {
         this.first = builder.first;
         this.second = builder.second;
+        this.message = builder.message;
+        this.status = builder.status;
     }
 
     public String getFirst() {
@@ -26,13 +30,21 @@ public final class Relation {
         return second;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Relation relation = (Relation) o;
-        return Objects.equal(first, relation.first) &&
-                Objects.equal(second, relation.second);
+        return Objects.equal(first, first) &&
+                Objects.equal(second, second);
     }
 
     @Override
@@ -45,12 +57,16 @@ public final class Relation {
         return MoreObjects.toStringHelper(this)
                 .add("first", first)
                 .add("second", second)
+                .add("message", message)
+                .add("status", status)
                 .toString();
     }
 
     public static class Builder {
         private String first;
         private String second;
+        private String message;
+        private int status;
 
         public Builder setFirst(String first) {
             this.first = first;
@@ -62,9 +78,18 @@ public final class Relation {
             return this;
         }
 
-        public Relation build() {
-            return new Relation(this);
+        public Builder setMessage(String message) {
+            this.message = message;
+            return this;
+        }
+
+        public Builder setStatus(int status) {
+            this.status = status;
+            return this;
+        }
+
+        public RelationRequest build() {
+            return new RelationRequest(this);
         }
     }
-
 }

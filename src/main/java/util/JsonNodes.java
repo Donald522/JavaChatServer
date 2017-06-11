@@ -12,5 +12,7 @@ public enum JsonNodes {
     USERS,
     MESSAGE,
     DIALOG_ID,
-    PROFILE
+    PROFILE,
+    USER_1,
+    USER_2
 }
