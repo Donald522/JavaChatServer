@@ -1,6 +1,6 @@
 package demo;
 
-import dao.core.ClientSessionDao;
+import dao.core.impl.ClientSessionDao;
 import dao.util.DataSourceProvider;
 import handler.ClientMessageParser;
 import handler.impl.ClientMessageParserImpl;

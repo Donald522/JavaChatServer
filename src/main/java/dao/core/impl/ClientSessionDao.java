@@ -1,4 +1,4 @@
-package dao.core;
+package dao.core.impl;
 
 import dao.util.Query;
 import model.user.Profile;
@@ -10,7 +10,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Anton Tolkachev.

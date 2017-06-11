@@ -1,6 +1,6 @@
 package storage;
 
-import dao.core.ClientSessionDao;
+import dao.core.impl.ClientSessionDao;
 import model.user.Profile;
 import model.user.User;
 import net.jcip.annotations.GuardedBy;
@@ -11,7 +11,12 @@ import javax.security.auth.RefreshFailedException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
