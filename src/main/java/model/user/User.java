@@ -1,5 +1,7 @@
 package model.user;
 
+import com.google.common.base.MoreObjects;
+
 import java.net.Socket;
 import java.util.HashSet;
 import java.util.Objects;
@@ -87,11 +89,10 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+        return MoreObjects.toStringHelper(this)
+                .add("name", name)
+                .add("status", status)
+                .add("profile", profile)
+                .toString();
     }
-
 }
