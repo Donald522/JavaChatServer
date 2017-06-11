@@ -1,8 +1,8 @@
 CREATE SCHEMA IF NOT EXISTS
     MSGR_APP;
 
-DROP TABLE IF EXISTS MSGR_APP.USERS;
-CREATE TABLE
+# DROP TABLE IF EXISTS MSGR_APP.USERS;
+CREATE TABLE IF NOT EXISTS
     MSGR_APP.USERS (
         user_id         INTEGER UNIQUE PRIMARY KEY NOT NULL,
         user_nickname   VARCHAR(30) UNIQUE NOT NULL,
@@ -17,14 +17,24 @@ CREATE TABLE
         FULLTEXT (interests)
     ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS MSGR_APP.FRIENDS;
-CREATE TABLE
-    MSGR_APP.FRIENDS (
-        pair_id         INTEGER NOT NULL AUTO_INCREMENT,
+# DROP TABLE IF EXISTS MSGR_APP.FRIEND_REQUESTS;
+CREATE TABLE IF NOT EXISTS
+    MSGR_APP.FRIEND_REQUESTS (
         user_1          VARCHAR(30) NOT NULL,
         user_2          VARCHAR(30) NOT NULL,
         message         TEXT,
-        status          VARCHAR(10),
+        status          INTEGER NOT NULL,
+        INDEX (user_1, user_2),
+        PRIMARY KEY (user_1, user_2),
+        FOREIGN KEY (user_1) REFERENCES MSGR_APP.USERS(user_nickname),
+        FOREIGN KEY (user_2) REFERENCES MSGR_APP.USERS(user_nickname)
+    ) ENGINE=MyISAM;
+
+# DROP TABLE IF EXISTS MSGR_APP.FRIENDS;
+CREATE TABLE IF NOT EXISTS
+    MSGR_APP.FRIENDS (
+        user_1          VARCHAR(30) NOT NULL,
+        user_2          VARCHAR(30) NOT NULL,
         INDEX (user_1, user_2),
         PRIMARY KEY (user_1, user_2),
         FOREIGN KEY (user_1) REFERENCES MSGR_APP.USERS(user_nickname),
