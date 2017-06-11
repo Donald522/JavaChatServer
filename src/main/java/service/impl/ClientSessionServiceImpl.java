@@ -1,6 +1,7 @@
 package service.impl;
 
-import dao.core.ClientSessionDao;
+import model.contact.Relation;
+import model.contact.RelationRequest;
 import model.dialog.Dialog;
 import model.dialog.Message;
 import model.user.Credentials;
@@ -11,8 +12,11 @@ import network.SocketProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import service.ClientSessionService;
+import service.ContactService;
 import service.DialogService;
 import storage.ClientSessionStorage;
+
+import java.util.Set;
 
 /**
  * Created by Anton Tolkachev.
@@ -23,18 +27,18 @@ public class ClientSessionServiceImpl implements ClientSessionService {
 
     private static final Logger logger = LogManager.getLogger(ClientSessionServiceImpl.class);
 
-    private ClientSessionDao dao;
-    private ClientSessionStorage storage;
-    private DialogService dialogService;
-    private SocketProvider socketProvider;
+    private final ClientSessionStorage storage;
+    private final DialogService dialogService;
+    private final ContactService contactService;
+    private final SocketProvider socketProvider;
 
-    public ClientSessionServiceImpl(ClientSessionDao dao,
-                                    ClientSessionStorage storage,
+    public ClientSessionServiceImpl(ClientSessionStorage storage,
                                     DialogService dialogService,
+                                    ContactService contactService,
                                     SocketProvider socketProvider) {
-        this.dao = dao;
         this.storage = storage;
         this.dialogService = dialogService;
+        this.contactService = contactService;
         this.socketProvider = socketProvider;
     }
 
@@ -154,5 +158,41 @@ public class ClientSessionServiceImpl implements ClientSessionService {
         }
         return dialogService.sendMessage(message);
     }
+
+    @Override
+    public boolean contactRequest(RelationRequest request) {
+        return contactService.request(request);
+    }
+
+    @Override
+    public Set<User> getContactsForUser(User user) {
+        return contactService.getContacts(user);
+    }
+
+    @Override
+    public Set<RelationRequest> getInboundRequests(User user) {
+        return contactService.getInboundRequests(user);
+    }
+
+    @Override
+    public Set<RelationRequest> getOutboundRequests(User user) {
+        return contactService.getOutboundRequests(user);
+    }
+
+    @Override
+    public boolean approveRequest(RelationRequest request) {
+        return contactService.approve(request);
+    }
+
+    @Override
+    public boolean rejectRequest(RelationRequest request) {
+        return contactService.request(request);
+    }
+
+    @Override
+    public boolean removeContact(Relation relation) {
+        return contactService.removeContact(relation);
+    }
+
 
 }
