@@ -1,3 +1,11 @@
 .idea/
 JavaChatServer.iml
-target/
+client-session-service.iml
+dialog-service.iml
+/client-session-service/target/
+/dialog-service/target/
+/contact-service/contact-service.iml
+/common/common.iml
+/network-service/network-service.iml
+/autorization-service/autorization-service.iml
+/server-runner/server-runner.iml
