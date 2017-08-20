@@ -9,3 +9,6 @@ dialog-service.iml
 /network-service/network-service.iml
 /autorization-service/autorization-service.iml
 /server-runner/server-runner.iml
+/server-runner/target/
+/client-api/client-api.iml
+/autorization-service/target/
