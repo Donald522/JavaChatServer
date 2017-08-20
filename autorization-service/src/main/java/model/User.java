@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
 
 import java.net.Socket;
@@ -15,10 +16,14 @@ public class User {
 
     private int id;
     private String name;
+
+    @JsonIgnore
     private transient String password;
 
+    @JsonIgnore
     private Status status = Status.OFFLINE;
 
+    @JsonIgnore
     private transient Set<Socket> sockets;
 
     private Profile profile;
